@@ -1,0 +1,76 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   @ft_view_section = {}
+
+   @edit_ctrl_cols = @edit_ctrl_cols || 120
+
+   @text_ctrl_rows = @text_ctrl_rows || 8
+   @text_ctrl_cols = @text_ctrl_cols || (@edit_ctrl_cols - 1)
+%>
+
+<!-- BEGIN-UID.user_vis_ctrls -->
+
+<!-- END-UID.user_vis_ctrls -->
+
+<%= error_messages_for 'attribute' %>
+
+<!--[form:attribute]-->
+<table class="aform_table">
+
+<% @ft_view_section[:name] = capture { %>
+<% if @show_item[:name] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="attribute_name">Name&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'attribute', 'name', :size => [120,@edit_ctrl_cols].min, :maxlength => "120", :id => "focus" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:sort_code] = capture { %>
+<% if @show_item[:sort_code] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="attribute_sort_code">Sort Code&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'attribute', 'sort_code', :size => "14" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<% @ft_view_section[:value] = capture { %>
+<% if @show_item[:value] then %>
+<tr class="aform_row">
+<td class="label">&nbsp;<label for="attribute_value">Value&nbsp;</label></td>
+<td class="value">&nbsp;<%= text_field 'attribute', 'value', :size => [120,@edit_ctrl_cols].min, :maxlength => "120" %></td>
+</tr>
+<% end %>
+<% } %>
+
+<%     @ft_view_section_order = []
+       @ft_view_section_order << :name
+       @ft_view_section_order << :sort_code
+       @ft_view_section_order << :value
+%>
+
+<!-- BEGIN-UID.user_section_ordering -->
+
+<!-- END-UID.user_section_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+
+
+<!-- BEGIN-UID.user_fields -->
+
+<!-- END-UID.user_fields -->
+
+</table>
+
+<input id="info_node" type="hidden" name="owner_id" value="<%=@owner ? @owner.id : ''%>"/>
+
+<!--[eoform:attribute]-->

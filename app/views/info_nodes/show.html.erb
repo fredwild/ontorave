@@ -1,0 +1,129 @@
+<% unless @embedded %>
+
+<div class="buttons_etc buttons_etc_top">
+<table class="buttons_etc_top_table" border="0" cellspacing="0">
+<tr>
+  <td width="60%" valign="top">
+    <%= js_button_to 'Modify', :controller => 'info_nodes', :action => 'edit', :id => @info_node %> 
+    <select onchange="javascript: location = this[this.selectedIndex].value;">
+      <option value="#">Select an action...</option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'info_nodes', :action => 'show', :id => @info_node.id)%>"> Normal Format </option>
+      <option value="<%=url_for(:controller => 'info_nodes', :action => 'show_as_doc', :id => @info_node.id)%>"> Document Format </option>
+      <option value="#">----------------</option>
+    <option value="<%=url_for(:controller => 'info_nodes', :action => 'list')%>"> <%="Table of Info Node".pluralize%> </option>
+    <option value="<%=url_for(:controller => 'info_nodes', :action => 'block_list')%>"> <%="List of Info Node".pluralize%> </option>
+
+    <option value="#">----------------</option>
+    <option value="<%=url_for(:controller => 'properties', :action => 'new', :item_id => @info_node.id, :obj_context => @info_node.iname)%>"> .. Add new Property </option>
+    <option value="<%=url_for(:controller => 'sections', :action => 'new', :owner_id => @info_node.id, :obj_context => @info_node.iname)%>"> .. Add new Section </option>
+    <option value="<%=url_for(:controller => 'attributes', :action => 'new', :owner_id => @info_node.id, :obj_context => @info_node.iname)%>"> .. Add new Attribute </option>
+    <option value="<%=url_for(:controller => 'values', :action => 'new', :owner_id => @info_node.id, :obj_context => @info_node.iname)%>"> .. Add new Value </option>
+    <option value="<%=url_for(:controller => 'info_nodes', :action => 'new', :owner_id => @info_node.id, :obj_context => @info_node.iname)%>"> .. Add new Info Node </option>
+
+<!-- BEGIN-UID.user_actions -->
+
+<!-- END-UID.user_actions -->
+
+    </select>
+  </td>
+  <td class="context" width="40%">
+   <%=context_links(@info_node)%>
+  </td>
+</tr>
+</table>
+</div>
+
+<% end %>
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   show_props_subview = 'show_properties'
+   show_rel_subview   = 'show_related'
+%>
+
+<!-- BEGIN-UID.user_ctrls -->
+
+<!-- END-UID.user_ctrls -->
+
+<div class="show_view show_view_info_node">   <!-- show_view -->
+
+    <p class="prev_next_links">
+    <%=link_to "previous", url_show(@info_node.prev_item), :title => "Previous Info Node", :style => "font-size:8pt;"%> 
+    | <%=link_to "next", url_show(@info_node.next_item), :title => "Next Info Node", :style => "font-size:8pt;"%>
+    </p>
+
+  <% if @show_item[:ft_show_props] %>
+    <div id="show_info_node_props" class="show_props show_props_info_node">   <!-- show_props -->
+
+<!-- BEGIN-UID.user_properties -->
+
+<!-- END-UID.user_properties -->
+
+       <%= render :partial => show_props_subview %>
+
+    </div>         <!-- show_props -->
+
+  <% end %>
+
+    <p class="spacer">&nbsp;</p>
+
+  <% if @show_item[:ft_show_rels] %>
+    <div id="show_info_node_rels" class="show_related">
+
+<!-- BEGIN-UID.user_related_items -->
+<h3 class="rel_items_heading">Related Items</h3>
+<!-- END-UID.user_related_items -->
+
+       <%= render :partial => show_rel_subview %>
+
+    </div>  <!-- show_related -->
+
+  <% end %>
+
+</div>  <!-- show_view -->
+
+<!-- BEGIN-UID.userdivs -->
+
+<!-- END-UID.userdivs -->
+
+<% unless @embedded %>
+
+<div class="buttons_etc buttons_etc_bottom">
+<table class="buttons_etc_bottom_table" border="0" cellspacing="0">
+<tr>
+  <td width="60%" valign="top">
+    <%= js_button_to 'Modify', :controller => 'info_nodes', :action => 'edit', :id => @info_node %> 
+    <select onchange="javascript: location = this[this.selectedIndex].value;">
+      <option value="#">Select an action...</option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'info_nodes', :action => 'show', :id => @info_node.id)%>"> Normal Format </option>
+      <option value="<%=url_for(:controller => 'info_nodes', :action => 'show_as_doc', :id => @info_node.id)%>"> Document Format </option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'info_nodes', :action => 'list')%>"> <%="Table of Info Node".pluralize%> </option>
+      <option value="<%=url_for(:controller => 'info_nodes', :action => 'block_list')%>"> <%="List of Info Node".pluralize%> </option>
+
+    <option value="#">----------------</option>
+    <option value="<%=url_for(:controller => 'properties', :action => 'new', :item_id => @info_node.id, :obj_context => @info_node.iname)%>"> .. Add new Property </option>
+    <option value="<%=url_for(:controller => 'sections', :action => 'new', :owner_id => @info_node.id, :obj_context => @info_node.iname)%>"> .. Add new Section </option>
+    <option value="<%=url_for(:controller => 'attributes', :action => 'new', :owner_id => @info_node.id, :obj_context => @info_node.iname)%>"> .. Add new Attribute </option>
+    <option value="<%=url_for(:controller => 'values', :action => 'new', :owner_id => @info_node.id, :obj_context => @info_node.iname)%>"> .. Add new Value </option>
+    <option value="<%=url_for(:controller => 'info_nodes', :action => 'new', :owner_id => @info_node.id, :obj_context => @info_node.iname)%>"> .. Add new Info Node </option>
+
+
+
+    </select>
+  </td>
+  <td class="context" width="40%">
+   <%=context_links(@info_node)%>
+  </td>
+</tr>
+</table>
+</div>
+
+<% end %>

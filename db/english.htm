@@ -1,0 +1,123 @@
+<html>
+<head>
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache"> <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache"> 
+  <link href="/stylesheets/styles.css" media="all" rel="Stylesheet" type="text/css" />
+  <title>Model in natural language</title>
+</head>
+<body class="english_model_facts" style="font-family:verdana; font-size:10pt;">
+    <h3> A plain language description of the Welcome to OntoRave model</h3> <hr>
+
+
+<p><b>Section</b></p>
+<blockquote>
+<p>
+&Omicron; 1. Each <span style="font-variant:small-caps;">Section</span> may have a <i>Name</i>, which carries a String value. 
+<br>
+&Omicron; 2. Each <span style="font-variant:small-caps;">Section</span> may have a <i>Created At</i>, which carries a DateTime value. 
+<br>
+&Omicron; 3. Each <span style="font-variant:small-caps;">Section</span> may have a <i>Updated At</i>, which carries a DateTime value. 
+<br>
+&Omicron; 4. Each <span style="font-variant:small-caps;">Section</span> may have a <i>Sort Code</i>, which carries a int value. 
+<br>
+&Omicron; 5. Each <span style="font-variant:small-caps;">Section</span> may have a <i>Body</i>, which carries a String value. 
+<br>
+</p>
+</blockquote>
+
+<p><b>Attribute</b></p>
+<blockquote>
+<p>
+&Omicron; 6. Each <span style="font-variant:small-caps;">Attribute</span> may have a <i>Name</i>, which carries a String value. 
+<br>
+&Omicron; 7. Each <span style="font-variant:small-caps;">Attribute</span> may have a <i>Created At</i>, which carries a DateTime value. 
+<br>
+&Omicron; 8. Each <span style="font-variant:small-caps;">Attribute</span> may have a <i>Updated At</i>, which carries a DateTime value. 
+<br>
+&Omicron; 9. Each <span style="font-variant:small-caps;">Attribute</span> may have a <i>Sort Code</i>, which carries a int value. 
+<br>
+&Omicron; 10. Each <span style="font-variant:small-caps;">Attribute</span> may have a <i>Value</i>, which carries a String value. 
+<br>
+</p>
+</blockquote>
+
+<p><b>Value</b></p>
+<blockquote>
+<p>
+&Omicron; 11. Each <span style="font-variant:small-caps;">Value</span> may have a <i>Name</i>, which carries a String value. 
+<br>
+&Omicron; 12. Each <span style="font-variant:small-caps;">Value</span> may have a <i>Created At</i>, which carries a DateTime value. 
+<br>
+&Omicron; 13. Each <span style="font-variant:small-caps;">Value</span> may have a <i>Updated At</i>, which carries a DateTime value. 
+<br>
+&Omicron; 14. Each <span style="font-variant:small-caps;">Value</span> may have a <i>Sort Code</i>, which carries a int value. 
+<br>
+</p>
+</blockquote>
+
+<p><b>Item</b></p>
+<blockquote>
+<p> &Omicron; 15. Item refers collectively to  
+Sections, Attributes, Values, InfoNodes.  All things true of Item are also true of these. </p>
+<p>
+&Omicron; 16. Each <span style="font-variant:small-caps;">Item</span> may have a <i>Name</i>, which carries a String value. 
+<br>
+&Omicron; 17. Each <span style="font-variant:small-caps;">Item</span> may have a <i>Created At</i>, which carries a DateTime value. 
+<br>
+&Omicron; 18. Each <span style="font-variant:small-caps;">Item</span> may have a <i>Updated At</i>, which carries a DateTime value. 
+<br>
+&Omicron; 19. Each <span style="font-variant:small-caps;">Item</span> may have a <i>Sort Code</i>, which carries a int value. 
+<br>
+</p>
+<p>
+&Omicron; 20. Each Item can have zero or more <i>property_attrs</i> (Property). 
+</p>
+</blockquote>
+
+<p><b>Info Node</b></p>
+<blockquote>
+<p>
+&Omicron; 21. Each <span style="font-variant:small-caps;">Info Node</span> may have a <i>Name</i>, which carries a String value. 
+<br>
+&Omicron; 22. Each <span style="font-variant:small-caps;">Info Node</span> may have a <i>Created At</i>, which carries a DateTime value. 
+<br>
+&Omicron; 23. Each <span style="font-variant:small-caps;">Info Node</span> may have a <i>Updated At</i>, which carries a DateTime value. 
+<br>
+&Omicron; 24. Each <span style="font-variant:small-caps;">Info Node</span> may have a <i>Sort Code</i>, which carries a int value. 
+<br>
+&Omicron; 25. Each <span style="font-variant:small-caps;">Info Node</span> may have a <i>View</i>, which carries a String value. 
+<br>
+</p>
+<p>
+&Omicron; 26. Each Info Node can have zero or more <i>items</i> (Item, a Section or Attribute or Value or InfoNode). 
+</p>
+<p>
+&Omicron; 27. Info Nodes may have zero or more <i>ref_targets</i> (Item, a Section or Attribute or Value or InfoNode). 
+ Also, each Item can have zero or more <i>ref_sources</i> (InfoNodes).
+</p>
+</blockquote>
+
+<p><b>Tag</b></p>
+<blockquote>
+<p>
+&Omicron; 28. Each <span style="font-variant:small-caps;">Tag</span> may have a <i>Name</i>, which carries a String value. 
+<br>
+</p>
+<p>
+&Omicron; 29. Tags may have zero or more <i>items</i> (Item, a Section or Attribute or Value or InfoNode). 
+ Also, each Item can have zero or more <i>tags</i> (Tags).
+</p>
+</blockquote>
+
+<p><b>Property</b></p>
+<blockquote>
+<p>
+&Omicron; 30. Each <span style="font-variant:small-caps;">Property</span> may have a <i>Name</i>, which carries a String value. 
+<br>
+&Omicron; 31. Each <span style="font-variant:small-caps;">Property</span> may have a <i>Value</i>, which carries a String value. 
+<br>
+</p>
+</blockquote>
+
+</body>
+</html>
+

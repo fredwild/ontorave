@@ -1,0 +1,37 @@
+
+
+<div style="padding:12px; background:wheat; border:solid 1px black;" id="doc_update_form<%=@doc_item.id.to_s%>">
+
+	<%= form_tag( params.update({:action => 'update_doc_item', :id => @doc_item}) ) %>
+
+		<div style="text-align:right; cursor:pointer; float:right;" onclick="Element.hide($('doc_update_form<%=@doc_item.id.to_s%>'))">
+			<%= submit_tag 'Cancel', :onclick => 'return false;' %>
+		</div>
+		<div style="float:right;margin-right:8px;"><%= submit_tag 'Save' %></div>
+
+
+		<p style="margin:0px; padding:0px; clear:both; ">
+		<b>Title</b><br />	
+		<input id="focus" type="text" name="doc_item[name]" value="<%=@doc_item.name%>" size="83" maxlength="120">
+		
+		<br /><br />
+		
+		<b>Body</b><br />
+		<%= text_area :doc_item, :body, :style => "width:99%; height:4in;" %>
+		</p>
+		
+
+		<p style="clear:both;"><!-- no text --></p>
+
+	
+		<div style="text-align:right; cursor:pointer; float:right;" onclick="Element.hide($('doc_update_form<%=@doc_item.id.to_s%>'))">
+			<%= submit_tag 'Cancel', :onclick => 'return false;' %>
+		</div>
+		<div style="float:right;margin-right:8px;"><%= submit_tag 'Save' %></div>
+
+		<p style="clear:both;"><!-- no text --></p>
+
+	</form> <!-- end form_tag -->
+
+
+</div>

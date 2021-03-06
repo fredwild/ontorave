@@ -1,0 +1,80 @@
+
+<!-- start toplinks -->
+
+<table class="tag_toplinks toplinks" style="margin-bottom:15px;" border="0" width="100%">
+<tr>
+<td class="toplinks_lhs">
+
+<p>
+ <%= js_button_to "Tabular View", params.merge(:controller => 'tags', :action => 'list'), :class => "table_view_button" %>
+<select onchange="javascript: location = this[this.selectedIndex].value;">
+    <option value="#">Select an action...</option>
+    <option value="#">----------------</option>
+    <option value="<%=url_for(:controller => 'tags', :action => 'new')%>"> Add new Tag </option>
+    <% unless session['user'] && !session['user'].is_admin? %>
+        <option value="#">----------------</option>
+        <option value="<%=url_for(params.merge(:controller => 'tags', :action => 'download_csv'))%>"> Download CSV </option>
+        <option value="<%=url_for(:controller => 'tags', :action => 'csv_upload')%>"> Upload CSV </option>
+    <% end %>
+
+<!-- BEGIN-UID.user_actions -->
+
+<!-- END-UID.user_actions -->
+
+    </select>
+</p>
+
+</td>
+
+<td class="toplinks_rhs">
+</td>
+</tr>
+</table>
+
+<!-- end toplinks -->
+
+<% listtext_op = session['list_text_toggles'] ? "show text" : "hide text" %>
+<%= link_to listtext_op, {:controller => 'fast_ops', :action => 'toggle_list_text_toggle'}, :style => 'font-size:8pt;' %> |
+<% listimage_op = session['list_image_toggles'] ? "show images" : "hide images" %>
+<%= link_to listimage_op, {:controller => 'fast_ops', :action => 'toggle_list_image_toggle'}, :style => 'font-size:8pt;' %>
+
+<% @tags.each { |obj| %>
+
+    <div class="obj_block">
+    <hr/>
+<div class="block_line_item">
+    <div class="block_label">Name:</div>
+    <% text = obj.name.to_s %>
+    <% text = rc_format((text)) %>
+<div class="block_value">
+    <%= link_to text, url_show(obj) %>
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">Count:</div>
+    <% text = obj.count.to_s %>
+    <% text = rc_format((text)) %>
+<div class="block_value">
+    <%= text %> 
+</div>
+</div>
+    </div>
+
+<% } %>
+
+<p class="spacer">&nbsp;</p>
+
+<p class="tags_bottom_links bottom_links">
+ <%= js_button_to "Tabular View", params.merge(:controller => 'tags', :action => 'list'), :class => "table_view_button" %>
+<select onchange="javascript: location = this[this.selectedIndex].value;">
+    <option value="#">Select an action...</option>
+    <option value="#">----------------</option>
+    <option value="<%=url_for(:controller => 'tags', :action => 'new')%>"> Add new Tag </option>
+    <% unless session['user'] && !session['user'].is_admin? %>
+        <option value="#">----------------</option>
+        <option value="<%=url_for(params.merge(:controller => 'tags', :action => 'download_csv'))%>"> Download CSV </option>
+        <option value="<%=url_for(:controller => 'tags', :action => 'csv_upload')%>"> Upload CSV </option>
+    <% end %>
+    </select>
+</p>
+

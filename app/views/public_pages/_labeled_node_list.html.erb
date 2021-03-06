@@ -1,0 +1,15 @@
+
+<div style=" border:solid 1px black;">
+	<div style="padding:0px 3px 0px 3px; 
+				color:<%=@opts[:label_color] || 'white'%>; 
+				background:<%=@opts[:label_background] || 'navy'%>; 
+				border-bottom:solid 1px black;">
+		<%= @opts[:label] || @list.name %>
+	</div>
+	<div style="padding:1px 3px 0px 3px; color:black; 
+				background:<%=@opts[:list_background] || 'white'%>;">
+		<% for item in @list.refs.concat(@list.sub_nodes) %>
+			<p style="margin:0px; padding:0px;"><%= link_to item.name, :action => 'display_element', :id => item %></p>
+		<% end %>
+	</div>
+</div>

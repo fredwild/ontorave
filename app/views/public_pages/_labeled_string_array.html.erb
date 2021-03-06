@@ -1,0 +1,15 @@
+
+<div style=" border:solid 1px black;">
+	<div style="padding:0px 3px 0px 3px; 
+				color:<%=@opts[:label_color] || 'white'%>; 
+				background:<%=@opts[:label_background] || 'navy'%>; 
+				border-bottom:solid 1px black;">
+		<%= @opts[:label] || "Items" %>
+	</div>
+	<div style="padding:1px 3px 0px 3px; color:black; 
+				background:<%=@opts[:list_background] || 'white'%>;">
+		<% for item in @list %>
+			<p style="margin:0px; padding:0px;"><%=item.to_s%></p>
+		<% end %>
+	</div>
+</div>

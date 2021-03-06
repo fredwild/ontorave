@@ -1,0 +1,256 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   @ft_view_section = {}
+%>
+
+<div class="show_hide_subtable_text">
+<% listtext_op = session['list_text_toggles'] ? "show text" : "hide text" %> 
+<%= link_to listtext_op, {:controller => 'fast_ops', :action => 'toggle_list_text_toggle'}, :style => 'font-size:8pt;' %> |
+<% listimage_op = session['list_image_toggles'] ? "show images" : "hide images" %>
+<%= link_to listimage_op, {:controller => 'fast_ops', :action => 'toggle_list_image_toggle'}, :style => 'font-size:8pt;' %>
+</div>
+
+
+<!-- BEGIN-UID.user_ctrls -->
+
+<!-- END-UID.user_ctrls -->
+
+
+<% @ft_view_section[:property_attrs] = capture { %>
+<% if @show_item[:property_attrs] then %>
+
+  <!-- Property Attrs -->
+
+  <a name="property_attrs"></a>
+
+  <div id="show_rel_property_attrs" class="show_rel show_rel_property_attrs">                                                 <!-- div28 -->
+    <div id="show_rel_property_attrs_label" class="rel_label"> Property Attrs &nbsp; <%= show_hide('show/hide','show_rel_property_attrs_value')%> </div>        <!-- div29 -->
+
+    <div id="show_rel_property_attrs_value" class="rel_value">                                                                           <!-- div30 -->
+        <table class="detail" cellspacing="1">
+        <tr>
+        <th> <%= link_to 'Name', { :controller => @item.ctrlr_name, :action => 'show', :id => @item, :order_sublist => 'property_attrs', :order_by => 'name' }, :class => 'col_sorting_link' %> </th>
+        <th> <%= link_to 'Value', { :controller => @item.ctrlr_name, :action => 'show', :id => @item, :order_sublist => 'property_attrs', :order_by => 'value' }, :class => 'col_sorting_link' %> </th>
+        </tr>
+        <% for property in (@property_attrs || []) %>
+        <tr>
+        <td class="no_lf">
+        <% text = property.name.to_s %>
+        <% text = (auto_link(text)) %>
+        <% text = "&nbsp;" if text.length == 0 %>
+        <%= link_to text, url_show(property), :class => "identity_link" %> 
+        </td>
+        <td class="no_lf">
+        <% text = property.value.to_s %>
+        <% text = (auto_link(text)) %>
+        <% text = "&nbsp;" if text.length == 0 %>
+    <%= text %> 
+        </td>
+        </tr>
+        <% end %>
+        </table>
+
+    </div>          <!-- div31 -->
+  </div>            <!-- div32 -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:items] = capture { %>
+<% if @show_item[:items] then %>
+
+  <!-- Items -->
+
+  <a name="items"></a>
+
+  <div id="show_rel_items" class="show_rel show_rel_items">                                                 <!-- div28 -->
+    <div id="show_rel_items_label" class="rel_label"> Items &nbsp; <%= show_hide('show/hide','show_rel_items_value')%> </div>        <!-- div29 -->
+
+    <div id="show_rel_items_value" class="rel_value">                                                                           <!-- div30 -->
+        <table class="detail" cellspacing="1">
+        <tr>
+        <th> <%= link_to 'Name', { :controller => @info_node.ctrlr_name, :action => 'show', :id => @info_node, :order_sublist => 'items', :order_by => 'name' }, :class => 'col_sorting_link' %> </th>
+        <th> <%= link_to 'Sort Code', { :controller => @info_node.ctrlr_name, :action => 'show', :id => @info_node, :order_sublist => 'items', :order_by => 'sort_code' }, :class => 'col_sorting_link' %> </th>
+        </tr>
+        <% for item in (@items || []) %>
+        <tr>
+        <td class="no_lf">
+        <% text = item.name.to_s %>
+        <% text = (auto_link(text)) %>
+        <% text = "&nbsp;" if text.length == 0 %>
+        <%= link_to text, url_show(item), :class => "identity_link" %> 
+        </td>
+        <td class="no_lf">
+        <% text = item.sort_code.to_s %>
+        <% text = (auto_link(text)) %>
+        <% text = "&nbsp;" if text.length == 0 %>
+    <%= text %> 
+        </td>
+        </tr>
+        <% end %>
+        </table>
+
+    </div>          <!-- div31 -->
+  </div>            <!-- div32 -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:ref_targets] = capture { %>
+<% if @show_item[:ref_targets] then %>
+
+  <!-- Ref Targets -->
+
+  <a name="ref_targets"></a>
+
+  <div id="show_rel_ref_targets" class="show_rel show_rel_ref_targets">                                                 <!-- div28 -->
+    <div id="show_rel_ref_targets_label" class="rel_label"> Ref Targets &nbsp; <%= show_hide('show/hide','show_rel_ref_targets_value')%> </div>        <!-- div29 -->
+
+    <div id="show_rel_ref_targets_value" class="rel_value">                                                                           <!-- div30 -->
+        <table class="detail" cellspacing="1">
+        <tr>
+        <th> <%= link_to 'Name', { :controller => @info_node.ctrlr_name, :action => 'show', :id => @info_node, :order_sublist => 'ref_targets', :order_by => 'name' }, :class => 'col_sorting_link' %> </th>
+        <th> <%= link_to 'Sort Code', { :controller => @info_node.ctrlr_name, :action => 'show', :id => @info_node, :order_sublist => 'ref_targets', :order_by => 'sort_code' }, :class => 'col_sorting_link' %> </th>
+        </tr>
+        <% for item in (@ref_targets || []) %>
+        <tr>
+        <td class="no_lf">
+        <% text = item.name.to_s %>
+        <% text = (auto_link(text)) %>
+        <% text = "&nbsp;" if text.length == 0 %>
+        <%= link_to text, url_show(item), :class => "identity_link" %> 
+        </td>
+        <td class="no_lf">
+        <% text = item.sort_code.to_s %>
+        <% text = (auto_link(text)) %>
+        <% text = "&nbsp;" if text.length == 0 %>
+    <%= text %> 
+        </td>
+        </tr>
+        <% end %>
+        </table>
+
+    </div>          <!-- div31 -->
+  </div>            <!-- div32 -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:ref_sources] = capture { %>
+<% if @show_item[:ref_sources] then %>
+
+  <!-- Ref Sources -->
+
+  <a name="ref_sources"></a>
+
+  <div id="show_rel_ref_sources" class="show_rel show_rel_ref_sources">                                                <!-- div33 -->
+    <div id="show_rel_ref_sources_label" class="rel_label"> Ref Sources &nbsp; <%= show_hide('show/hide','show_rel_ref_sources_value')%></div>            <!-- div34 -->
+
+    <div id="show_rel_ref_sources_value" class="rel_value">                                           <!-- div35 -->
+
+
+        <table class="detail rev_list" cellspacing="1">
+        <tr>
+        <th> <%= link_to 'Name', { :controller => @item.ctrlr_name, :action => 'show', :id => @item, :order_sublist => 'ref_sources', :order_by => 'name' }, :class => 'col_sorting_link' %> </th>
+        <th> <%= link_to 'Sort Code', { :controller => @item.ctrlr_name, :action => 'show', :id => @item, :order_sublist => 'ref_sources', :order_by => 'sort_code' }, :class => 'col_sorting_link' %> </th>
+        <th> <%= link_to("Owner", { :controller => @item.ctrlr_name, :action => 'show', :id => @item, :order_sublist => 'ref_sources', :order_by => 'owner' }, :class => 'col_sorting_link') %> </th>
+        </tr>
+
+<% if @ref_sources != nil %>
+<% for info_node in (@ref_sources.kind_of? Array) ? @ref_sources : [ @ref_sources ] %>
+        <tr>
+        <td class="no_lf">
+        <% text = info_node.name.to_s %>
+        <% text = (auto_link(text)) %>
+        <% text = "&nbsp;" if text.length == 0 %>
+        <%= link_to text, url_show(info_node), :class => 'identity_link' %> 
+        </td>
+        <td class="no_lf">
+        <% text = info_node.sort_code.to_s %>
+        <% text = (auto_link(text)) %>
+        <% text = "&nbsp;" if text.length == 0 %>
+        <%= text %> 
+        </td>
+        <td> <%= info_node.owner && link_to(info_node.owner.iname, url_show(info_node.owner)) %>&nbsp;</td>
+        </tr> 
+<% end %>
+<% end %>
+        </table>
+
+    </div>           <!-- end div35 -->
+  </div>               <!-- end div33 -->
+<% end %>
+<% } %>
+
+
+
+<% @ft_view_section[:tags] = capture { %>
+<% if @show_item[:tags] then %>
+
+  <!-- Tags -->
+
+  <a name="tags"></a>
+
+  <div id="show_rel_tags" class="show_rel show_rel_tags">                                                <!-- div33 -->
+    <div id="show_rel_tags_label" class="rel_label"> Tags &nbsp; <%= show_hide('show/hide','show_rel_tags_value')%></div>            <!-- div34 -->
+
+    <div id="show_rel_tags_value" class="rel_value">                                           <!-- div35 -->
+
+
+        <table class="detail rev_list" cellspacing="1">
+        <tr>
+        <th> <%= link_to 'Name', { :controller => @item.ctrlr_name, :action => 'show', :id => @item, :order_sublist => 'tags', :order_by => 'name' }, :class => 'col_sorting_link' %> </th>
+        <th> Count </th>
+        </tr>
+
+<% if @tags != nil %>
+<% for tag in (@tags.kind_of? Array) ? @tags : [ @tags ] %>
+        <tr>
+        <td class="no_lf">
+        <% text = tag.name.to_s %>
+        <% text = (auto_link(text)) %>
+        <% text = "&nbsp;" if text.length == 0 %>
+        <%= link_to text, url_show(tag), :class => 'identity_link' %> 
+        </td>
+        <td class="no_lf">
+        <% text = tag.count.to_s %>
+        <% text = (auto_link(text)) %>
+        <% text = "&nbsp;" if text.length == 0 %>
+        <%= text %> 
+        </td>
+        </tr> 
+<% end %>
+<% end %>
+        </table>
+
+    </div>           <!-- end div35 -->
+  </div>               <!-- end div33 -->
+<% end %>
+<% } %>
+
+
+<% @ft_view_section_order = []
+   @ft_view_section_order << :property_attrs
+   @ft_view_section_order << :items
+   @ft_view_section_order << :ref_targets
+   @ft_view_section_order << :ref_sources
+   @ft_view_section_order << :tags
+%>
+
+<!-- BEGIN-UID.user_ordering -->
+
+<!-- END-UID.user_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+

@@ -1,0 +1,117 @@
+
+<% content_for('menu_bar') do %>
+    <%=link_to "DELETE", {:action => 'delete', :id => @node}, :style=>"float:right; margin-left:.25in;", :confirm => "Sure? This can't be reversed." %>
+<% end %>
+
+<div>
+
+	<div style="position:absolute; top:90px; left:0px; width:100%; z-index:10;">
+
+		<div style="float:right; margin-right:25px;">
+			<%= show_hide 'Attributes', 'info_obj_attrs' %>
+			<div id="info_obj_attrs" style="display:none; background:ivory; padding:6px; border:solid 3px green;">
+				<div style="margin-right:8px; border-bottom:solid 1px black; padding-bottom:5px; margin-bottom:5px;">
+					<%= update_attrs_form_for(@node) %>
+				</div>
+	
+				<%=form_tag :action => 'add_attributes', :id => @node %>
+					Name : Value pairs, one per line <br />
+					<%=text_area_tag "items", {}, :style=>'width:2.0in;'%><br />
+				  	<%=submit_tag("Save")%>
+				  	<%=submit_with_confirm_tag("Rename")%>
+				  	<%=submit_with_confirm_tag("Remove")%>
+				</form>
+			</div>
+		</div>
+
+		<% unless @node.is_domain? %>
+			<div style="float:right; margin-right:15px;">
+				<%= show_hide 'Rename', 'op_rename' %>
+				<div id="op_rename" style="display:none; background:ivory; padding:6px; border:solid 3px green;">
+					<%=form_remote_tag :url => url_for(:action => 'rename_node', :id => @node),
+	                                   :update => 'h_node_name',
+									   :complete => "Element.hide('op_rename')" %>
+						<%=text_field_tag "new_name", {}, :style=>'width:2.0in;'%><br />
+					  	<%=submit_with_confirm_tag("Rename")%>
+					</form>
+				</div>
+			</div>
+
+			<div style="float:right; margin-right:15px;">
+				<%= show_hide 'Move', 'op_move' %>
+				<div id="op_move" style="display:none; background:ivory; padding:6px; border:solid 3px green;">
+					<div id="move_to_form" style="margin:8px 0 0 0;">
+						<%=link_to_remote "Choose move target...",  
+							:url=>url_for(:action => 'move_to_form', :id => @node),
+							:update => 'move_to_form' %>
+					</div>
+				</div>
+			</div>
+		<% end %>
+
+	</div>
+
+	<div style="position:absolute; top:58px; left:0px; width:100%;">
+		<% bgcolor = "transparent"; bgcolor2 = "ivory"; @tag = Tag.new %>
+		<div style="float:right; margin-right:40px; background:<%=bgcolor%>">
+			<%=form_remote_tag( :url => url_for(:action => 'find_by_tags'), 
+								:update => 'tag_matches',
+							    :complete => "Element.show('tag_matches')" ) %>
+				<%=text_field_with_auto_complete :tag, :name, :style => 'width:1in;' %> &nbsp; <%=submit_tag("Find by tag(s)", :style => 'width:1in;' )%> 
+			</form>
+			<div id="tag_matches" onclick="Element.hide('tag_matches');"
+				 style="display:none; border:solid 1px black; margin-top:5px; width:2.2in; background:<%=bgcolor2%>; height:0.8in; overflow:auto;">
+			</div>
+		</div>
+	
+		<div style="margin-left:200px;">
+			<%= js_button_to "&nbsp;View&nbsp;", :action => 'wiki_view_element', :id => @node %>
+		</div>
+	</div>
+
+
+	<!-- Main Content --> 
+
+	<div class="wiki_lhs">
+		<%= render :partial => 'wiki_lhs' %>
+	</div>
+		
+	<div class="wiki_rhs">
+
+		<div class="wiki_rhs_content">
+
+			<h1 id="h_node_name" style="margin-bottom:0px; margin-top:0px; border-bottom:solid 1px black; ">
+				<%= @node.iname %>
+			</h1>
+
+			<div style="position:relative; top:28px; left:55px; margin:0px; padding:0px; z-index:0;">
+				<div style="float:right; margin-right:70px; margin-top:7px; padding:0px;">
+					<%= link_to "Formatting Help", "http://hobix.com/textile/", :style => "font-size:8pt;", :target => "Textile Reference" %>
+				</div>
+				<%=js_button_to "Cancel", {:action => 'wiki_view_element', :id => @node.id}, {:style=>"height:23px; margin:0px; padding:0px;"} %>
+			</div>
+
+			<div style="margin:0px; padding:0px;">
+				<% for @doc in @docs do %>
+					<%= form_tag({:action => 'wiki_update', :id => @doc.id}, {:style=>"margin:0px; padding:0px;"}) %>
+						<p style="margin:0px; padding:0px; margin-top:5px;"><%= submit_tag "Save", :style=>"width:50px; margin-bottom:5px; height:23px;" %></p>
+		
+						<%= text_area :doc, :body, :style => "width:99%; height:4.5in;" %>
+		
+						<p style="margin:0px; padding:0px; margin-top:5px;"><%= submit_tag "Save", :style=>"width:50px; height:23px;" %></p>
+					</form>
+				<% end %>
+			</div>
+			
+			<div style="margin:0px; padding:0px;">
+				<div style="position:relative; top:-23px; left:55px; margin:0px; padding:0px;">
+					<%=js_button_to "Cancel", {:action => 'wiki_view_element', :id => @node.id}, {:style=>"height:23px; margin:0px; padding:0px;"} %>
+				</div>
+			</div>
+			
+			<p style="height:1.5in;">&nbsp;</p>
+		</div>
+	</div>
+	
+</div>
+

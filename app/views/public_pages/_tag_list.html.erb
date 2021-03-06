@@ -1,0 +1,31 @@
+
+<%
+	@splay = @splay || 'horizontal'
+	sep = ""
+	for @tag in (@tags || @obj.user_tags) do
+%>
+		<% if @splay == 'horizontal' %>
+
+			<span style="margin-left:0px; color:maroon;font-size:8pt;">
+				<%=sep%><%=link_to "x", 
+					{:action => 'remove_tag', 
+					 :id => @obj, :tagid => @tag.id, 
+					 :context => @context}, :title => "Remove" %>&nbsp;|&nbsp;<%=@tag.iname%>
+			</span>
+			
+			<% sep = "&nbsp;&nbsp;&nbsp;" %>
+			
+		<% else %>		
+
+			<span style="margin-left:10px; color:maroon;font-size:8pt;">
+				<%=link_to "x", 
+					{:action => 'remove_tag', 
+					 :id => @obj, :tagid => @tag.id, 
+					 :context => @context}, :title => "Remove" %>&nbsp;|&nbsp;<%=@tag.iname%><br/>
+			</span>
+
+		<% end %>		
+<%
+	end
+%>
+

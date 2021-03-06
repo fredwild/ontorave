@@ -1,0 +1,400 @@
+
+
+
+<% edit_icon = "pencil.jpg" %>
+
+
+
+<p style="float:right; top:30px; margin-right:30px;">
+	<%= link_to "<b>View</b>", :action => 'show_element', :id => @node %>
+</p>
+
+<% bgcolor = "transparent" %>
+<div style="clear:right; float:right; width:40%; padding-top:12px; background:<%=bgcolor%>">
+	<%=form_tag({:action => "#{session['mode']}_element", :id => @node}, {:style=>"background:#{bgcolor};"}) %>
+		<%=submit_tag("Find by tag(s)", :style => 'width:1.1in;' )%> <%=text_field_tag("tags")%>
+	</form>
+	<% if params[:tags] && ! params[:tags].empty? %>
+	  <div style="width:2.5in; background:<%=bgcolor%>; border:solid 1px black; height:.7in; overflow:auto;">
+		<% for item in elements_with_all_tags(params[:tags]).sort{|i1,i2| i1.iname <=> i2.iname} do %>
+			<p style="background:<%=bgcolor%>}; margin:0px 0px 0px 10px;"><%= link_to item.iname, :action => 'edit_element', :id => item %></p>
+		<% end %>
+	  </div>
+	<% end %>
+</div>
+
+<h1 name="hlist_name" id="hlist_name" style="color:maroon; margin-botom:8px;"><%=@node.iname%></h1>
+
+<div style="clear:left; float:left; margin-left:0px;">
+	<div style="margin-bottom:10px;">
+		<p style="margin-bottom:6px;">	
+		<%=form_remote_tag  :url => url_for({:action => 'rename_node', :id => @node}),
+							:update => 'hlist_name' %>
+			<%=submit_tag "Rename to", :style => 'width:1.1in;' %>
+			<%=text_field_tag "new_name", { }, {:style => "width:2in;"} %>
+		</form>
+		</p>
+		<div id="move_to_form" style="margin:8px 0 0 0;">
+			<%=link_to_remote submit_tag("Move...",{:onclick=>'return false;'}),  
+				:url=>url_for(:action => 'move_to_form', :id => @node),
+				:update => 'move_to_form' %>
+		</div>
+	</div>
+</div>
+
+<% content_for('menu_bar') do %>
+    <%=link_to "DELETE", {:action => 'delete', :id => @node}, :style=>"float:right; margin-left:.25in;", :confirm => "Sure? This can't be reversed." %>
+<% end %>
+
+
+<!-- Tags --> 
+
+<p class="spacer"></p>
+	
+<div>
+	<fieldset>
+	
+		<div class="v-stacked" style="display:none; float:right; margin-right:20px; margin-top:10px;" id="add_tags_form">
+		  <%=form_tag :action => 'add_tags', :id => @node %>
+			 Tag names: one per line<br />
+			 <%=text_area_tag "items", {}, :style=>'width:2.0in;'%><br />
+		  	 <%=submit_tag("Save")%>
+		  	 <%=submit_with_confirm_tag("Remove")%>
+		  </form>
+		</div>
+	
+		<div style="margin-left:15px; margin-right:20%;">
+			<h5>Tags <span onclick="Element.toggle($('add_tags_form'));" 
+					  style="cursor:pointer; color:blue;"><%=image_tag("#{edit_icon}",:alt=>"Edit")%></span>
+			</h5>
+		</div>
+	
+		<div class="tags" style="margin-right:20%;">
+			<% @obj = @node; @context = @node; @splay = 'horizontal' %>
+			<%=render :partial => 'tag_list'%>
+		</div>
+	
+	</fieldset>
+</div>
+
+<% unless @node.has_tag?("_is_view") %>
+
+<!-- Simple Items -->
+		
+<p class="spacer"></p>
+
+<div>
+	<fieldset>
+	
+		<div class="v-stacked" style="display:none; float:right; margin-right:20px; margin-top:10px;" id="add_simple_items_form">
+		  <%=form_tag :action => 'add_values', :id => @node %>
+			 Values: one per line <br />
+			 <%=text_area_tag "items", {}, :style=>'width:2.0in;'%><br />
+		  	 <%=submit_tag("Save")%>
+		  	 <%=submit_with_confirm_tag("Remove")%>
+		  </form>
+		</div>
+	
+		<div style="margin-left:15px;">
+			<h5>Values <span onclick="Element.toggle($('add_simple_items_form'));" 
+						  style="cursor:pointer; color:blue;"><%=image_tag("#{edit_icon}",:alt=>"Edit")%></span>
+				</h5>
+		</div>
+		
+		<div style="margin-left:20px;">
+		  <% for v in @values do%>
+			<p style="margin:0px; padding:0px;"><%=strip_para(auto_link(rc_format(v.name.to_s)))%></p>
+		  <% end %>
+		  <p class="spacer"></p>
+		</div>
+		
+	  </fieldset>
+</div>
+
+
+<!-- Named Items -->		
+
+<p class="spacer"></p>
+
+<div>
+	<fieldset>
+	
+		<div class="v-stacked" style="display:none; float:right; margin-right:20px; margin-top:10px;" id="add_named_items_form">
+			<div style="margin-right:8px; border-bottom:solid 1px black; padding-bottom:5px; margin-bottom:5px;">
+				<%= update_attrs_form_for(@node) %>
+			</div>
+
+		  <%=form_tag :action => 'add_attributes', :id => @node %>
+			 Name : Value pairs, one per line <br />
+			 <%=text_area_tag "items", {}, :style=>'width:2.0in;'%><br />
+		  	 <%=submit_tag("Save")%>
+		  	 <%=submit_with_confirm_tag("Rename")%>
+		  	 <%=submit_with_confirm_tag("Remove")%>
+		  </form>
+		</div>
+
+		<div style="margin-left:15px;">
+			<h5>Attributes <span onclick="Element.toggle($('add_named_items_form'));" 
+						  style="cursor:pointer; color:blue;"><%=image_tag("#{edit_icon}",:alt=>"Edit")%></span>
+				</h5>
+		</div>
+		
+		<div style="margin-left:20px;">
+		  <table>
+			  <% for named_item in @attributes do%>
+				<tr>
+					<td><i><%=named_item.name.to_s%></i></td>
+					<td>:</td>
+					<td><%=auto_link(strip_para(rc_format(named_item.value.to_s)))%></td>
+				</tr> 
+			  <% end %>
+		  </table>
+		</div>
+		
+	
+  </fieldset>
+</div>
+
+
+
+<!-- Doc Items -->
+
+<p class="spacer"></p>
+
+<div>
+	<fieldset>
+	
+	<div class="v-stacked" style="display:none; float:right; margin-right:20px; margin-top:10px;" id="add_docs_form">
+	  <%=form_tag :action => 'add_doc', :id => @node %>
+		 Title / Content<br />
+	     <%=text_field_tag "name", {}, :style=>'width:3.5in;'%> <br />
+		 <%=text_area_tag "body", {}, :style=>'width:3.5in;height:1.0in;'%><br />
+	  	 <%=submit_tag("Save")%>
+		 <%=submit_with_confirm_tag("Remove")%>
+	  </form>
+	</div>
+	
+	<div style="margin-left:15px;">
+	  <h5>Text Sections <span onclick="Element.toggle($('add_docs_form'));" 
+					  style="cursor:pointer; color:blue;"><%=image_tag("#{edit_icon}",:alt=>"Edit")%></span>
+			</h5>
+	</div>
+	
+	<p class="spacer"></p>
+	
+	<div class="docs">
+	  <% last_doc = nil %>
+	  <% for @doc in @docs do%>
+		<div class="doc">
+			<div id="scratch_area_<%=@doc.id.to_s%>" style="width:100%; display:none;"></div>
+			<div class="doc_name">
+				<% if last_doc %>
+					<p style="margin:0px; float:right;">
+						<%=link_to "Move Up", :action => 'move_up', :id => @node, :curr_id => @doc, :prev_id => last_doc%>
+					</p>
+				<% end %>
+				<%=link_to_remote @doc.name.to_s, 
+							:url => url_for(:action => 'edit_doc_item', :id => @doc),
+							:update => "scratch_area_#{@doc.id.to_s}",
+							:complete => "Element.show('scratch_area_#{@doc.id.to_s}')" %>
+			</div>
+			<div class="doc_body">
+				<%=rc_format(@doc.body.to_s)%>
+			</div>
+		</div>
+		<% last_doc = @doc %>
+	  <% end %>
+
+	  <p class="spacer"></p>
+	</div>
+	
+	</fieldset>
+</div>
+
+
+<!-- Sub Elements -->
+
+<div>
+
+	<fieldset>
+	
+	<div class="v-stacked" style="display:none; float:right; margin-right:20px; margin-top:10px;" id="add_sub_nodes_form">
+		<%=form_tag :action => 'add_sub_nodes', :id => @node %>
+			Item names: one per line <br />
+			 <%=text_area_tag "items", {}, :style=>'width:2.0in;'%><br />
+			 <%=submit_tag("Save")%>
+		  	 <%=submit_with_confirm_tag("Remove")%>
+		</form>
+	</div>
+
+	<div style="margin-left:15px;">
+	  <h5>Sub Elements <span onclick="Element.toggle($('add_sub_nodes_form'));" 
+					  style="cursor:pointer; color:blue;"><%=image_tag("#{edit_icon}",:alt=>"Edit")%></span>
+			</h5>
+	</div>
+
+
+
+	
+	<table>
+		<tr>
+			<td valign="top">
+				
+	<div style="margin-top:10px; padding-right:40px;">
+		<% # tree_for(@node,{:controller => 'public_pages', :action => "edit_element"}) %>
+	</div>
+
+			</td>
+
+			<td valign="top">
+	
+	<div class="lists">
+		<%=form_tag(:action => 'apply_sub_item_edits', :id => @node) %>
+	
+			<table style="margin-top:8px;"><tr>
+				<td><%=submit_with_confirm_tag("Delete")%>&nbsp;</td> 
+				<td>&nbsp;&nbsp;<%=submit_tag("Add Tag")%> 
+				<%=text_field_tag("text")%></td>
+			</tr></table>
+				
+			<table>
+			<% for @sub_node in @sub_nodes do%>
+				<tr>
+				<td class="no_lf">
+					<div class="list">
+						<div class="list_name">
+							<p style="margin:0px;">
+							<%=check_box_tag("ids[#{@sub_node.id}]")%>&nbsp;<%=link_to @sub_node.name.to_s, :action => 'edit_element', :id => @sub_node%>
+							</p>
+						</div>
+					</div>
+				</td>
+				<td class="no_lf" style="padding-left:10px;">
+					<% @obj = @sub_node; @context = @node; @splay = 'horizontal' %>
+					<%=render :partial => 'tag_list'%>
+				</td>
+				</tr>
+			<% end %>
+			</table>
+			<p class="spacer"></p>
+		</form>
+	</div>
+
+			</td>			
+		</tr>
+	</table>
+	
+
+
+
+	
+	</fieldset>
+
+</div>
+
+<!-- Reference Targets -->
+
+<div style="float:right; width:49.5%;">
+	<fieldset>
+	
+	<div class="v-stacked" style="display:none; float:right; margin-right:20px; margin-top:10px;" id="add_refs_form">
+	  <%=form_tag :action => 'add_refs', :id => @node %>
+		 Qualified item names: one per line<br />
+		 <%=text_area_tag "items", {}, :style=>'width:2.0in;'%><br />
+	  	 <%=submit_tag("Save")%>
+	  	 <%=submit_with_confirm_tag("Remove")%>
+	  </form>
+	</div>
+	
+	<div style="margin-left:15px;">
+	  <h5 style="float:left; height:20px;">Outbound Refs </h5>
+	  <div onclick="Element.toggle($('add_refs_form'));" 
+				  style="float:left; cursor:pointer; color:blue;"><%=image_tag("#{edit_icon}",:alt=>"Edit")%></div>
+	</div>
+	
+	<div class="refs">
+	  <% for ref in @refs do%>
+		<div class="ref_name">
+			<%=link_to ref.name.to_s, {:action => 'edit_element', :id => ref}, :title => ref.qname%>
+		</div>
+	  <% end %>
+	  <p class="spacer"></p>
+	</div>
+	
+	</fieldset>
+</div>
+
+<!-- Reference Sources -->
+
+<div style="float:left; width:49.5%;">
+	<fieldset>
+	
+	<div style="margin-left:15px;">
+	  <h5 style="height:20px;">Inboud Refs</h5>
+	</div>
+	
+	<p class="spacer"></p>
+	
+	<div class="refs">
+	  <% for ref in @in_refs do%>
+		<div class="ref">
+			<div class="ref_name"><p><%=link_to ref.name.to_s, { :action => 'edit_element', :id => ref }, :title => ref.qname%></p></div>
+		</div>
+	  <% end %>
+	  <p class="spacer"></p>
+	</div>
+	
+	</fieldset>
+</div>
+
+<% end %>
+
+<!-- Custom View -->
+
+<p class="spacer"></p>
+
+<div>
+	<fieldset>
+		<div class="doc">
+			<div class="doc_name">
+				<%=link_to_remote "Custom View", 
+					:url => url_for(:action => 'edit_view', :id => @node),
+					:update => "scratch_area_view",
+					:complete => "Element.hide('view_code');" %>
+				| 
+				<%=link_to_remote image_tag("#{edit_icon}", :title => 'Edit', :border=>"0"), 
+					:url => url_for(:action => 'edit_view', :id => @node),
+					:update => "scratch_area_view",
+					:complete => "Element.hide('view_code');" %>
+
+<% if ! @node.view.to_s.empty? %>
+				| <%=image_tag("view.jpg", :onclick => "Element.toggle('view_code')") %>
+<% end %>
+				| <%=link_to_remote "<span style='font-size:12pt;'><b>?</b></span>", 
+					:url => url_for(:action => 'help_edit_view'),
+					:update => "help_view",
+					:complete => "Element.toggle('help_view');" %>
+			</div>
+
+			<div>
+				<div id="help_view" style="width:100%; display:none;"></div>
+				
+				<div id="scratch_area_view" style="width:100%;">
+					<% if @node.has_tag?("_is_view") %>
+						<%= render :partial => 'edit_view' %>
+					<% end %>
+				</div>
+	
+				<div id="view_code" class="doc_body" style="display:none;">
+<% if ! @node.view.to_s.empty? %>
+<pre style="font-family:courier new;">
+<%=h @node.view.to_s%>
+</pre>
+<% end %>
+				</div>
+			</div>
+
+		</div>
+	</fieldset>
+</div>
+

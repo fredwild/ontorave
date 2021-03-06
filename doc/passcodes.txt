@@ -1,0 +1,12 @@
+
+mysql> select * from properties where name = 'passcode' ;
++-----+----------+---------+--------------+
+| id  | name     | value   | item_item_id |
++-----+----------+---------+--------------+
+| 546 | passcode | Friend! |         1540 |
+| 547 | passcode | LDS!    |          781 |
+| 548 | passcode | FHC!    |         1789 |
+| 553 | passcode | fhw3    |         1848 |
+| 560 | passcode | ast!    |          398 |
++-----+----------+---------+--------------+
+

@@ -1,0 +1,379 @@
+
+<table width="100%" border="0" cellspacing="0" style="margin-top:-5px;margin-bottom:30px;">
+<tr>
+<td width="60%" valign="top">
+<%= js_button_to 'Modify', :action => 'edit', :id => @info_node %> 
+<select onchange="javascript: location = this[this.selectedIndex].value;">
+    <option value="#">Select an action...</option>
+    <option value="#">----------------</option>
+    <option value="<%=url_for(:action => 'list')%>"> <%="Show all Info Node".pluralize%> </option>
+
+    <option value="#">----------------</option>
+    <option value="<%=url_for(:controller => 'properties', :action => 'new', :item_id => @info_node.id, :obj_context => @info_node.iname)%>"> .. Add new Property </option>
+    <option value="<%=url_for(:controller => 'sections', :action => 'new', :info_node_id => @info_node.id, :obj_context => @info_node.iname)%>"> .. Add new Section </option>
+    <option value="<%=url_for(:controller => 'attributes', :action => 'new', :info_node_id => @info_node.id, :obj_context => @info_node.iname)%>"> .. Add new Attribute </option>
+    <option value="<%=url_for(:controller => 'values', :action => 'new', :info_node_id => @info_node.id, :obj_context => @info_node.iname)%>"> .. Add new Value </option>
+    <option value="<%=url_for(:controller => 'info_nodes', :action => 'new', :info_node_id => @info_node.id, :obj_context => @info_node.iname)%>"> .. Add new Info Node </option>
+
+<!-- BEGIN-UID.user_actions -->
+
+<!-- END-UID.user_actions -->
+
+    </select>
+</td>
+<td class="context" width="40%">
+   <%=context_links(@info_node)%>
+</td>
+</tr>
+</table>
+
+
+<%
+    # display control vector
+    show_item = Hash.new
+
+    show_item[:name] = true
+    show_item[:created_at] = true
+    show_item[:updated_at] = true
+    show_item[:sort_code] = true
+    show_item[:property_attrs] = true
+    show_item[:ref_targets] = true
+    show_item[:items] = true
+    show_item[:view] = true
+    show_item[:items] = true
+    show_item[:ref_targets] = true
+%>
+
+
+<div class="show_view show_view_info_node">   <!-- show_view -->
+
+    <div class="show_props show_props_info_node">   <!-- show_props -->
+
+<!-- BEGIN-UID.user_properties -->
+
+<!-- END-UID.user_properties -->
+
+
+
+<% if show_item[:name] then %>
+
+  <!-- Name -->
+
+  <div class="show_attr_group attr_group_item_name title">      <!-- div10 -->
+    <div class="show_attr_label"> Name </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"> <%= auto_link(@item.name.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+
+
+<% if show_item[:sort_code] then %>
+
+  <!-- Sort Code -->
+
+  <div class="show_attr_group attr_group_item_sort_code ">      <!-- div10 -->
+    <div class="show_attr_label"> Sort Code </div>                    <!-- div11 -->
+    <div class="show_attr_value single_line"> <%= auto_link(@item.sort_code.to_s) %>&nbsp;</div>   <!-- div12h -->
+  </div>   <!-- div10 end -->
+<% end %>
+
+
+<% if show_item[:view] then %>
+
+  <!-- View -->
+
+  <div class="show_attr_group attr_group_info_node_view ">      <!-- div10 -->
+    <div class="show_attr_label"> View </div>                    <!-- div11 -->
+    <div class="show_attr_value multiline">
+<pre>
+<%=h @info_node.view.to_s %> 
+</pre>
+    </div>   <!-- div12g -->
+    </div>   <!-- div10 end -->
+<% end %>
+
+    </div>         <!-- show_props -->
+
+
+    <p  class="spacer" style="clear:both;">&nbsp;</p>
+
+    <div class="show_related">
+
+<!-- BEGIN-UID.user_related_items -->
+<h3 class="rel_items_heading">Related Items</h3>
+<!-- END-UID.user_related_items -->
+
+
+<% if show_item[:property_attrs] then %>
+
+
+  <!-- Property Attrs -->
+
+  <a name="property_attrs"></a>
+
+  <div class="show_rel show_out_rel show_out_rel_property_attrs">                                                                                              <!-- div28 -->
+    <div class="rel_label"> Property Attrs </div>        <!-- div29 -->
+
+    <div class="rel_value">                                                                                            <!-- div30 -->
+        <table class="detail" cellspacing="1">
+        <tr>
+        <th> <%= link_to 'Name', { :controller => @item.ctrlr_name, :action => 'show', :id => @item, :order_sublist => 'property_attrs', :order_by => 'name' }, :class => 'col_sorting_link' %> </th>
+        <th> <%= link_to 'Value', { :controller => @item.ctrlr_name, :action => 'show', :id => @item, :order_sublist => 'property_attrs', :order_by => 'value' }, :class => 'col_sorting_link' %> </th>
+        </tr>
+        <% if @property_attrs != nil %>
+          <% for property in @property_attrs %>
+        <tr>
+        <td class="no_lf">
+        <% text = property.name.to_s %>
+        <% text = (auto_link(text)) %>
+        <% text = "&nbsp;" if text.length == 0 %>
+        <%= link_to text, url_show(property), :class => "identity_link" %> 
+        </td>
+        <td class="no_lf">
+        <% text = property.value.to_s %>
+        <% text = (auto_link(text)) %>
+        <% text = "&nbsp;" if text.length == 0 %>
+        <%= text %>
+        </td>
+        </tr>
+          <% end %>
+        <% end %>
+        </table>
+
+    </div>          <!-- div31 -->
+  </div>            <!-- div32 -->
+
+
+<% end %>
+
+
+<% if show_item[:items] then %>
+
+
+  <!-- Items -->
+
+  <a name="items"></a>
+
+  <div class="show_rel show_out_rel show_out_rel_items">                                                                                              <!-- div28 -->
+    <div class="rel_label"> Items </div>        <!-- div29 -->
+
+    <div class="rel_value">                                                                                            <!-- div30 -->
+        <table class="detail" cellspacing="1">
+        <tr>
+        <th> <%= link_to 'Name', { :controller => @info_node.ctrlr_name, :action => 'show', :id => @info_node, :order_sublist => 'items', :order_by => 'name' }, :class => 'col_sorting_link' %> </th>
+        <th> <%= link_to 'Created At', { :controller => @info_node.ctrlr_name, :action => 'show', :id => @info_node, :order_sublist => 'items', :order_by => 'created_at' }, :class => 'col_sorting_link' %> </th>
+        <th> <%= link_to 'Updated At', { :controller => @info_node.ctrlr_name, :action => 'show', :id => @info_node, :order_sublist => 'items', :order_by => 'updated_at' }, :class => 'col_sorting_link' %> </th>
+        </tr>
+        <% if @items != nil %>
+          <% for item in @items %>
+        <tr>
+        <td class="no_lf">
+        <% text = item.name.to_s %>
+        <% text = (auto_link(text)) %>
+        <% text = "&nbsp;" if text.length == 0 %>
+        <%= link_to text, url_show(item), :class => "identity_link" %> 
+        </td>
+        <td class="no_lf">
+        <% text = item.created_at.nil? ? "" : item.created_at.to_datetime_image%>
+        <% text = "&nbsp;" if text.length == 0 %>
+        <%= text %>
+        </td>
+        <td class="no_lf">
+        <% text = item.updated_at.nil? ? "" : item.updated_at.to_datetime_image%>
+        <% text = "&nbsp;" if text.length == 0 %>
+        <%= text %>
+        </td>
+        </tr>
+          <% end %>
+        <% end %>
+        </table>
+
+    </div>          <!-- div31 -->
+  </div>            <!-- div32 -->
+
+
+<% end %>
+
+
+<% if show_item[:ref_targets] then %>
+
+
+  <!-- Ref Targets -->
+
+  <a name="ref_targets"></a>
+
+  <div class="show_rel show_out_rel show_out_rel_ref_targets">                                                                                              <!-- div28 -->
+    <div class="rel_label"> Ref Targets </div>        <!-- div29 -->
+
+    <div class="rel_value">                                                                                            <!-- div30 -->
+        <table class="detail" cellspacing="1">
+        <tr>
+        <th> <%= link_to 'Name', { :controller => @info_node.ctrlr_name, :action => 'show', :id => @info_node, :order_sublist => 'ref_targets', :order_by => 'name' }, :class => 'col_sorting_link' %> </th>
+        <th> <%= link_to 'Created At', { :controller => @info_node.ctrlr_name, :action => 'show', :id => @info_node, :order_sublist => 'ref_targets', :order_by => 'created_at' }, :class => 'col_sorting_link' %> </th>
+        <th> <%= link_to 'Updated At', { :controller => @info_node.ctrlr_name, :action => 'show', :id => @info_node, :order_sublist => 'ref_targets', :order_by => 'updated_at' }, :class => 'col_sorting_link' %> </th>
+        </tr>
+        <% if @ref_targets != nil %>
+          <% for item in @ref_targets %>
+        <tr>
+        <td class="no_lf">
+        <% text = item.name.to_s %>
+        <% text = (auto_link(text)) %>
+        <% text = "&nbsp;" if text.length == 0 %>
+        <%= link_to text, url_show(item), :class => "identity_link" %> 
+        </td>
+        <td class="no_lf">
+        <% text = item.created_at.nil? ? "" : item.created_at.to_datetime_image%>
+        <% text = "&nbsp;" if text.length == 0 %>
+        <%= text %>
+        </td>
+        <td class="no_lf">
+        <% text = item.updated_at.nil? ? "" : item.updated_at.to_datetime_image%>
+        <% text = "&nbsp;" if text.length == 0 %>
+        <%= text %>
+        </td>
+        </tr>
+          <% end %>
+        <% end %>
+        </table>
+
+    </div>          <!-- div31 -->
+  </div>            <!-- div32 -->
+
+
+<% end %>
+
+
+
+<% if show_item[:ref_targets] then %>
+
+
+    <!-- Ref Sources -->
+
+  <a name="ref_sources"></a>
+
+  <div class="show_rel show_in_rel show_in_rel_ref_targets">                                                <!-- div33 -->
+    <div class="rel_label"> Ref Sources </div>            <!-- div34 -->
+
+    <div class="rel_value">                                           <!-- div35 -->
+
+
+        <table class="detail" cellspacing="1">
+        <tr>
+        <th> <%= link_to 'Name', { :controller => @item.ctrlr_name, :action => 'show', :id => @item, :order_sublist => 'ref_sources', :order_by => 'name' }, :class => 'col_sorting_link' %> </th>
+        <th> <%= link_to 'Created At', { :controller => @item.ctrlr_name, :action => 'show', :id => @item, :order_sublist => 'ref_sources', :order_by => 'created_at' }, :class => 'col_sorting_link' %> </th>
+        <th> <%= link_to 'Updated At', { :controller => @item.ctrlr_name, :action => 'show', :id => @item, :order_sublist => 'ref_sources', :order_by => 'updated_at' }, :class => 'col_sorting_link' %> </th>
+        </tr>
+
+<% if @ref_sources != nil %>
+<% for info_node in (@ref_sources.kind_of? Array) ? @ref_sources : [ @ref_sources ] %>
+        <tr>
+
+        <td class="no_lf">
+        <% text = info_node.name.to_s %>
+        <% text = (auto_link(text)) %>
+        <% text = "&nbsp;" if text.length == 0 %>
+        <%= link_to info_node.iname, url_show(info_node), :class => 'identity_link' %> 
+        </td>
+        <td class="no_lf">
+        <% text = info_node.created_at.nil? ? "" : info_node.created_at.to_datetime_image %>
+        <% text = "&nbsp;" if text.length == 0 %>
+        <%= text %>
+        </td>
+        <td class="no_lf">
+        <% text = info_node.updated_at.nil? ? "" : info_node.updated_at.to_datetime_image %>
+        <% text = "&nbsp;" if text.length == 0 %>
+        <%= text %>
+        </td>
+        </tr> 
+<% end %>
+<% end %>
+        </table>
+
+    </div>           <!-- end div35 -->
+  </div>               <!-- end div33 -->
+
+<% end %>
+
+
+
+
+<% if show_item[:items] then %>
+
+
+    <!-- Tags -->
+
+  <a name="tags"></a>
+
+  <div class="show_rel show_in_rel show_in_rel_items">                                                <!-- div33 -->
+    <div class="rel_label"> Tags </div>            <!-- div34 -->
+
+    <div class="rel_value">                                           <!-- div35 -->
+
+
+        <table class="detail" cellspacing="1">
+        <tr>
+        <th> <%= link_to 'Name', { :controller => @item.ctrlr_name, :action => 'show', :id => @item, :order_sublist => 'tags', :order_by => 'name' }, :class => 'col_sorting_link' %> </th>
+        <th> Count </th>
+        </tr>
+
+<% if @tags != nil %>
+<% for tag in (@tags.kind_of? Array) ? @tags : [ @tags ] %>
+        <tr>
+
+        <td class="no_lf">
+        <% text = tag.name.to_s %>
+        <% text = (auto_link(text)) %>
+        <% text = "&nbsp;" if text.length == 0 %>
+        <%= link_to tag.iname, url_show(tag), :class => 'identity_link' %> 
+        </td>
+        <td class="no_lf">
+        <% text = tag.count.to_s %>
+        <% text = (auto_link(text)) %>
+        <% text = "&nbsp;" if text.length == 0 %>
+        <%= text %>
+        </td>
+        </tr> 
+<% end %>
+<% end %>
+        </table>
+
+    </div>           <!-- end div35 -->
+  </div>               <!-- end div33 -->
+
+<% end %>
+
+
+    </div>  <!-- show_related -->
+
+</div>  <!-- show_view -->
+
+<!-- BEGIN-UID.userdivs -->
+
+<!-- END-UID.userdivs -->
+
+
+<table width="100%" border="0" cellspacing="0" style="margin-bottom:-5px;margin-top:30px;">
+<tr>
+<td width="60%" valign="top">
+<%= js_button_to 'Modify', :action => 'edit', :id => @info_node %> 
+<select onchange="javascript: location = this[this.selectedIndex].value;">
+    <option value="#">Select an action...</option>
+    <option value="#">----------------</option>
+    <option value="<%=url_for(:action => 'list')%>"> <%="Show all Info Node".pluralize%> </option>
+
+    <option value="#">----------------</option>
+    <option value="<%=url_for(:controller => 'properties', :action => 'new', :item_id => @info_node.id, :obj_context => @info_node.iname)%>"> .. Add new Property </option>
+    <option value="<%=url_for(:controller => 'sections', :action => 'new', :info_node_id => @info_node.id, :obj_context => @info_node.iname)%>"> .. Add new Section </option>
+    <option value="<%=url_for(:controller => 'attributes', :action => 'new', :info_node_id => @info_node.id, :obj_context => @info_node.iname)%>"> .. Add new Attribute </option>
+    <option value="<%=url_for(:controller => 'values', :action => 'new', :info_node_id => @info_node.id, :obj_context => @info_node.iname)%>"> .. Add new Value </option>
+    <option value="<%=url_for(:controller => 'info_nodes', :action => 'new', :info_node_id => @info_node.id, :obj_context => @info_node.iname)%>"> .. Add new Info Node </option>
+
+
+
+    </select>
+</td>
+<td class="context" width="40%">
+   <%=context_links(@info_node)%>
+</td>
+</tr>
+</table>
+

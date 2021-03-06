@@ -1,0 +1,180 @@
+
+<p style="float:right; top:30px; margin-right:30px;">
+<%= link_to "<b>Edit</b>", :action => 'edit_element', :id => @node %>
+</p>
+
+<h1 name="hlist_name" id="hlist_name" style="color:maroon; margin-botom:8px;"><%=@node.iname%></h1>
+
+<p class="spacer">&nbsp;</p>
+
+<table class="pub_view_table">
+	<tr>
+		<td class="pub_view_lhs">
+
+			<div style="padding-top:4px; background:transparent;">
+				<%=form_tag({:action => "#{session['mode']}_element", :id => @node}, { :style=>"background:transparent;" } ) %>
+					<%=submit_tag("Find by tag(s)", :style => 'width:1.1in;' )%> <%=text_field_tag("tags")%>
+				</form>
+				<% if params[:tags] && ! params[:tags].empty? %>
+				  <div style="width:2in; background:transparent; border:solid 1px black; height:.7in; overflow:auto;">
+					<% for item in elements_with_all_tags(params[:tags]).sort{|i1,i2| i1.iname <=> i2.iname} do %>
+						<p style="background:transparent; margin:0px 0px 0px 10px;"><%= link_to item.iname, :action => 'show_element', :id => item %></p>
+					<% end %>
+				  </div>
+				<% end %>
+			</div>
+
+
+			<!-- Tags -->
+			
+			<p class="spacer">&nbsp;</p>
+
+			<div>
+				<h5>Tags <span onclick="Element.toggle($('add_tags_form'));" 
+						  style="cursor:pointer; color:blue;"><%=image_tag("pencil_ddd.jpg",:alt=>"Edit")%></span>
+				</h5>
+			</div>
+			
+			<p class="spacer"></p>
+			
+			<div class="v-stacked" style="display:none; margin-right:0px; margin-top:10px;" id="add_tags_form" name="add_tags_form">
+			  <%=form_tag :action => 'add_tags', :id => @node %>
+				 Tag names <br />
+				 <%=text_area_tag "items", {}, :style=>'width:1.8in;'%><br />
+			  	 <%=submit_tag("Save")%>
+			  	 <%=submit_with_confirm_tag("Remove")%>
+			  </form>
+			</div>
+			
+			<p class="spacer"></p>
+			
+			<div class="tags" style="clear:left; float:left;">
+				<% @obj = @node; @context = @node; @splay = 'vertical' %>
+				<%=render :partial => 'tag_list'%>
+			</div>
+
+
+			<!-- Simple Items -->
+			
+			<p class="spacer">&nbsp;</p>
+			
+			<div>
+				<h5>Values</h5>
+			</div>
+			
+			<div class="simple_items">
+			  <% for simple_item in @values do%>
+				<div class="simple_item">
+					<div class="simple_item_name"><p style="<%=simple_item.get_attr('name_style').to_s%>"><%=auto_link(rc_format(simple_item.name.to_s))%></p></div>
+				</div> 
+			  <% end %>
+			  <p class="spacer"></p>
+			</div>
+			
+			
+			<!-- Named Items -->
+			
+			<p class="spacer">&nbsp;</p>
+
+			<div>
+				<h5>Attributes</h5>
+			</div>
+			
+			<div class="named_items">
+			  <table>
+			  <% for named_item in @attributes do%>
+				<tr>
+					<td><i><%=named_item.name.to_s%></i></td>
+					<td>:</td>
+					<td><%=auto_link(strip_para(rc_format(named_item.value.to_s)))%></td>
+				</tr> 
+			  <% end %>
+			  </table>
+			</div>
+			
+			<p class="spacer"></p>
+			
+			<div class="v-stacked" style="display:none; margin-right:10%;" id="add_named_items_form" name="add_named_items_form">
+			  <%=form_tag :action => 'add_named_items', :id => @node %>
+				 Name:Value pairs <br />
+				 <%=text_area_tag "items", {}, :style=>'width:2.0in;'%><br />
+			  	 <%=submit_tag("Save")%>
+			  	 <%=submit_with_confirm_tag("Remove")%>
+			  </form>
+			</div>
+
+
+			<!-- Sub Elements -->						
+
+			<p class="spacer">&nbsp;</p>
+			
+			<div>
+			  <h5>Sub Elements</h5>
+			</div>
+
+			<div class="lists" style="width:100%;">
+				<%=tree_for(@node, {:controller => 'public_pages', :action => "show_element"})%>
+			</div>
+
+			<!-- Inbound Refs -->						
+
+			<p class="spacer">&nbsp;</p>
+
+			<div">
+			  <h5 style="height:20px;">Inboud Refs</h5>
+			</div>
+			
+			<div class="refs">
+			  <% for ref in @in_refs do%>
+				<div class="ref">
+					<div class="ref_name"><p style="<%=ref.get_attr('name_style').to_s%>"><%=link_to ref.name.to_s, { :action => 'show_element', :id => ref }, :title => ref.qname%></p></div>
+				</div>
+			  <% end %>
+			  <p class="spacer"></p>
+			</div>
+
+
+		</td>
+
+
+		<td class="pub_view_mid">
+
+
+			<!-- Doc Items -->
+			
+			<p class="spacer"></p>
+			
+			<div class="docs">
+			  <% for @doc in @docs do %>
+				<div class="view_doc">
+					<div class="view_doc_name"><%=@doc.name.to_s%></div>
+					<div class="view_doc_body"><%=rc_format(@doc.body.to_s)%></div>
+				</div>
+			  <% end %>
+			  <p class="spacer"></p>
+			</div>
+				
+
+		</td>
+
+		<td class="pub_view_rhs">
+			
+			<!-- Reference Targets -->
+			
+				<div>
+				  <h5 style="float:left; height:20px;">Outboud Refs</h5>
+				</div>
+				
+				<div class="refs">
+				  <% for ref in @refs do%>
+					<div class="ref">
+						<div class="ref_name"><p style="<%=ref.get_attr('name_style').to_s%>"><%=link_to ref.name.to_s, {:action => 'show_element', :id => ref}, :title => ref.qname%></p></div>
+					</div>
+				  <% end %>
+				  <p class="spacer"></p>
+				</div>
+				
+		</td>
+
+	</tr>
+</table>

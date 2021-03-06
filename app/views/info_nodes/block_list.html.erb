@@ -1,0 +1,111 @@
+
+<!-- start toplinks -->
+
+<table class="info_node_toplinks toplinks" style="margin-bottom:15px;" border="0" width="100%">
+<tr>
+<td class="toplinks_lhs">
+
+<p>
+ <%= js_button_to "Tabular View", params.merge(:controller => 'info_nodes', :action => 'list'), :class => "table_view_button" %>
+<select onchange="javascript: location = this[this.selectedIndex].value;">
+    <option value="#">Select an action...</option>
+    <% unless session['user'] && !session['user'].is_admin? %>
+        <option value="#">----------------</option>
+        <option value="<%=url_for(params.merge(:controller => 'info_nodes', :action => 'download_csv'))%>"> Download CSV </option>
+        <option value="<%=url_for(:controller => 'info_nodes', :action => 'csv_upload')%>"> Upload CSV </option>
+    <% end %>
+
+<!-- BEGIN-UID.user_actions -->
+
+<!-- END-UID.user_actions -->
+
+    </select>
+</p>
+
+</td>
+
+<td class="toplinks_rhs">
+</td>
+</tr>
+</table>
+
+<!-- end toplinks -->
+
+<% listtext_op = session['list_text_toggles'] ? "show text" : "hide text" %>
+<%= link_to listtext_op, {:controller => 'fast_ops', :action => 'toggle_list_text_toggle'}, :style => 'font-size:8pt;' %> |
+<% listimage_op = session['list_image_toggles'] ? "show images" : "hide images" %>
+<%= link_to listimage_op, {:controller => 'fast_ops', :action => 'toggle_list_image_toggle'}, :style => 'font-size:8pt;' %>
+
+<% @info_nodes.each { |obj| %>
+
+    <div class="obj_block">
+    <hr/>
+<div class="block_line_item">
+    <div class="block_label">Name:</div>
+    <% text = obj.name.to_s %>
+    <% text = rc_format((text)) %>
+<div class="block_value">
+    <%= link_to text, url_show(obj) %>
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">Created At:</div>
+    <% text = obj.created_at.nil? ? "" : obj.created_at.to_datetime_image %>
+<div class="block_value">
+    <%= text %> 
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">Updated At:</div>
+    <% text = obj.updated_at.nil? ? "" : obj.updated_at.to_datetime_image %>
+<div class="block_value">
+    <%= text %> 
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">Sort Code:</div>
+    <% text = obj.sort_code.to_s %>
+    <% text = rc_format((text)) %>
+<div class="block_value">
+    <%= text %> 
+</div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">Owner:</div>
+    <div class="block_value">
+        <%= link_to(obj.owner.iname, url_show(obj.owner)) if obj.owner %>
+    </div>
+</div>
+<div class="block_line_item">
+    <div class="block_label">View:</div>
+    <% text = obj.view.to_s %>
+    <% text = rc_format((text)) %>
+<div class="block_value">
+          <% if session['list_text_toggles'] then %>
+             <%= show_hide "show/hide","view_attr_#{obj.id}"%>
+             <div class="cell_text_popup" id="view_attr_<%=obj.id%>" style="display:none;">
+                <%= text %>
+             </div>
+          <% else %>
+             <%= text %>
+          <% end %>
+</div>
+</div>
+    </div>
+
+<% } %>
+
+<p class="spacer">&nbsp;</p>
+
+<p class="info_nodes_bottom_links bottom_links">
+ <%= js_button_to "Tabular View", params.merge(:controller => 'info_nodes', :action => 'list'), :class => "table_view_button" %>
+<select onchange="javascript: location = this[this.selectedIndex].value;">
+    <option value="#">Select an action...</option>
+    <% unless session['user'] && !session['user'].is_admin? %>
+        <option value="#">----------------</option>
+        <option value="<%=url_for(params.merge(:controller => 'info_nodes', :action => 'download_csv'))%>"> Download CSV </option>
+        <option value="<%=url_for(:controller => 'info_nodes', :action => 'csv_upload')%>"> Upload CSV </option>
+    <% end %>
+    </select>
+</p>
+

@@ -1,0 +1,33 @@
+
+
+#BEGIN-UID.userconfigs
+
+#END-UID.userconfigs
+
+
+development:
+    adapter: mysql
+    database: ontorave_development
+    username: root
+    password: 
+    host: localhost
+    port: 3306
+    encoding: utf8
+
+test:
+    adapter: mysql
+    database: ontorave_test
+    username: root
+    password: 
+    host: localhost
+    port: 3306
+    encoding: utf8
+
+production:
+    adapter: mysql
+    database: ontorave_development
+    username: root
+    password: 
+    host: localhost
+    port: 3306
+    encoding: utf8

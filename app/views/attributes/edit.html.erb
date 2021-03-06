@@ -1,0 +1,295 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   view_params = { :form_name => 'attributes/form' }
+   @ft_view_section = {}
+%>
+<% unless @embedded %>
+
+<div class="buttons_etc buttons_etc_top">
+<table class="buttons_etc_top_table" border="0" cellspacing="0">
+<tr>
+  <td width="60%" valign="top">
+    <%= js_button_to 'Normal View', :controller => 'attributes', :action => 'show', :id => @attribute %> 
+    <select onchange="javascript: location = this[this.selectedIndex].value;">
+      <option value="#">Select an action...</option>
+      <option value="#">----------------</option>
+    <option value="<%=url_for(:controller => 'attributes', :action => 'list')%>"> <%="Table of Attribute".pluralize%> </option>
+    <option value="<%=url_for(:controller => 'attributes', :action => 'block_list')%>"> <%="List of Attribute".pluralize%> </option>
+
+    <option value="#">----------------</option>
+    <option value="<%=url_for(:controller => 'properties', :action => 'new', :item_id => @attribute.id, :obj_context => @attribute.iname)%>"> .. Add new Property </option>
+
+<!-- BEGIN-UID.user_actions -->
+
+<!-- END-UID.user_actions -->
+
+    </select>
+  </td>
+  <td class="context" width="40%">
+   <%=context_links(@attribute)%>
+  </td>
+</tr>
+</table>
+</div>
+
+<% end %>
+
+<!-- BEGIN-UID.user_mods -->
+
+<!-- END-UID.user_mods -->
+
+<fieldset>
+<LEGEND>Properties</LEGEND>
+
+<% form_tag(:controller => 'attributes', :action => 'update', :id => @attribute) do %>
+  <p class="submit_top">&nbsp;<%= submit_tag 'Save Changes' %> </p>
+  <%= render :partial => view_params[:form_name] %>
+  <p class="submit_bottom">&nbsp;<%= submit_tag 'Save Changes' %> </p>
+<% end %> <!-- end form_tag -->
+
+</fieldset>
+
+<p class="spacer">&nbsp;</p>
+
+<div class="edit_view edit_view_attribute">              <!-- div1 -->
+
+<!-- BEGIN-UID.user_related_items -->
+<h3 class="rel_items_heading">Related Items</h3>
+<!-- END-UID.user_related_items -->
+
+<div class="show_hide_subtable_text">
+<% listtext_op = session['list_text_toggles'] ? "show text" : "hide text" %>
+<%= link_to listtext_op, {:controller => 'fast_ops', :action => 'toggle_list_text_toggle'}, :style => 'font-size:8pt;' %> | 
+<% listimage_op = session['list_image_toggles'] ? "show images" : "hide images" %>
+<%= link_to listimage_op, {:controller => 'fast_ops', :action => 'toggle_list_image_toggle'}, :style => 'font-size:8pt;' %>
+</div>
+
+<% @ft_view_section = {} %>
+
+<% @ft_view_section[:property_attrs] = capture { %>
+<% if @show_item[:property_attrs] then %>
+
+  <!-- Property Attrs -->
+
+  <a name="property_attrs"></a>
+
+  <div id="show_rel_property_attrs" class="show_rel show_rel_property_attrs">                                                 <!-- div28 -->
+    <div class="detail_quick_add detail_quick_add_property" id="quick_add_item_property_attrs" style="float:right;">
+        <%= show_hide "Quick-add Properties by name", 'quick_add_property_attrs' %>
+        <div id="quick_add_property_attrs" style="display:none; margin-bottom:4px; padding:8px;">
+            enter one name per line
+            <% form_tag(:controller => 'items', :action => 'quick_add_property_attrs', :id => @item.id) do %>
+                <%=text_area_tag 'names', {}, :style=>"width:2in; height:0.5in;"%> <br />
+                <%=submit_tag 'Add Properties'%>
+            <% end %>
+        </div>
+    </div>
+
+    <div id="show_rel_property_attrs_label" class="rel_label"> Property Attrs &nbsp; <%= show_hide('show/hide','show_rel_property_attrs_value')%> </div>        <!-- div29 -->
+
+    <div id="show_rel_property_attrs_value" class="rel_value">                                                                           <!-- div30 -->
+        <table class="detail" cellspacing="1">
+        <tr>
+        <th>&nbsp;</th>
+        <th> <%= link_to 'Name', { :controller => @item.ctrlr_name, :action => 'edit', :id => @item, :order_sublist => 'property_attrs', :order_by => 'name' }, :class => 'col_sorting_link' %> </th>
+        <th> <%= link_to 'Value', { :controller => @item.ctrlr_name, :action => 'edit', :id => @item, :order_sublist => 'property_attrs', :order_by => 'value' }, :class => 'col_sorting_link' %> </th>
+        </tr>
+        <% for property in (@property_attrs || []) %>
+        <tr>
+
+        <td class="links no_lf">
+        <%= link_to image_tag("blue_x.jpg",{:border=>"0", :title => 'Delete'}), { :controller => 'properties', :action => 'destroy', :id => property.id }, :confirm => 'Are you sure?' %>
+        &nbsp; <%= link_to image_tag("pencil.gif",{:border=>"0", :title => 'Edit'}), {:controller => property.ctrlr_name, :action => 'edit', :id => property.id, :item_id => @item.id} %> 
+        </td>
+        <td class="no_lf">
+        <% text = property.name.to_s %>
+        <% text = (auto_link(text)) %>
+        <% text = "&nbsp;" if text.length == 0 %>
+        <%= link_to text, url_show(property), :class => "identity_link" %> 
+        </td>
+        <td class="no_lf">
+        <% text = property.value.to_s %>
+        <% text = (auto_link(text)) %>
+        <% text = "&nbsp;" if text.length == 0 %>
+    <%= text %> 
+        </td>
+        </tr>
+        <% end %>
+        <tr>
+        <td class="cmd" colspan="4">
+        <%= link_to 'Add New Property', :controller => 'properties', :action => 'new', :item_id => @item.id, :obj_context => @item.iname %> 
+        </td>
+        </tr>
+        </table>
+
+    </div>          <!-- div31 -->
+  </div>            <!-- div32 -->
+<% end %>
+<% } %>
+
+<% @ft_view_section[:ref_sources] = capture { %>
+<% if @show_item[:ref_sources] then %>
+
+  <!-- Ref Sources -->
+
+  <a name="ref_sources"></a>
+
+  <div id="show_rel_ref_sources" class="show_rel show_rel_ref_sources">                                                <!-- div33 -->
+    <div id="show_rel_ref_sources_label" class="rel_label"> Ref Sources &nbsp; <%= show_hide('show/hide','show_rel_ref_sources_value')%></div>            <!-- div34 -->
+
+    <div id="show_rel_ref_sources_value" class="rel_value">                                           <!-- div35 -->
+
+
+        <table class="detail rev_list" cellspacing="1">
+        <tr>
+        <th>&nbsp;</th>
+        <th> <%= link_to 'Name', { :controller => @item.ctrlr_name, :action => 'edit', :id => @item, :order_sublist => 'ref_sources', :order_by => 'name' }, :class => 'col_sorting_link' %> </th>
+        <th> <%= link_to 'Sort Code', { :controller => @item.ctrlr_name, :action => 'edit', :id => @item, :order_sublist => 'ref_sources', :order_by => 'sort_code' }, :class => 'col_sorting_link' %> </th>
+        <th> <%= link_to("Owner", { :controller => @item.ctrlr_name, :action => 'edit', :id => @item, :order_sublist => 'ref_sources', :order_by => 'owner' }, :class => 'col_sorting_link') %> </th>
+        </tr>
+
+<% if @ref_sources != nil %>
+<% for info_node in (@ref_sources.kind_of? Array) ? @ref_sources : [ @ref_sources ] %>
+        <tr>
+    <td class="links no_lf">
+        <%= link_to image_tag("blue_x.jpg",{:border=>"0", :title => 'Remove'}), {:controller => 'items', :action => 'remove_from_ref_sources', :id => @item.id, :info_node_id => info_node.id} %>
+        </td>
+        <td class="no_lf">
+        <% text = info_node.name.to_s %>
+        <% text = (auto_link(text)) %>
+        <% text = "&nbsp;" if text.length == 0 %>
+        <%= link_to text, url_show(info_node), :class => 'identity_link' %> 
+        </td>
+        <td class="no_lf">
+        <% text = info_node.sort_code.to_s %>
+        <% text = (auto_link(text)) %>
+        <% text = "&nbsp;" if text.length == 0 %>
+        <%= text %> 
+        </td>
+        <td> <%= info_node.owner && link_to(info_node.owner.iname, url_show(info_node.owner)) %>&nbsp;</td>
+        </tr> 
+<% end %>
+<% end %>
+        <tr><td class="cmd" colspan="4"> 
+<%= link_to 'Add Info Node', :controller => 'items', :action => 'add_to_ref_sources', :id => @item.id, :obj_context => @item.iname %> 
+</td></tr>
+        </table>
+
+    </div>           <!-- end div35 -->
+  </div>               <!-- end div33 -->
+<% end %>
+<% } %>
+
+<% @ft_view_section[:tags] = capture { %>
+<% if @show_item[:tags] then %>
+
+  <!-- Tags -->
+
+  <a name="tags"></a>
+
+  <div id="show_rel_tags" class="show_rel show_rel_tags">                                                <!-- div33 -->
+    <div class="detail_quick_add" style="float:right;">
+        <%= show_hide "Quick-add Tags by name", 'quick_add_tags' %>
+        <div id="quick_add_tags" style="display:none; margin-bottom:4px; padding:8px;">
+            enter one name per line
+            <% form_tag(:controller => 'items', :action => 'quick_add_tags', :id => @item.id) do %>
+                <%=text_area_tag 'names', {}, :style=>"width:2in; height:0.5in;"%> <br />
+                <%=submit_tag 'Add Tags'%>
+            <% end %>
+        </div>
+    </div>
+
+    <div id="show_rel_tags_label" class="rel_label"> Tags &nbsp; <%= show_hide('show/hide','show_rel_tags_value')%></div>            <!-- div34 -->
+
+    <div id="show_rel_tags_value" class="rel_value">                                           <!-- div35 -->
+
+
+        <table class="detail rev_list" cellspacing="1">
+        <tr>
+        <th>&nbsp;</th>
+        <th> <%= link_to 'Name', { :controller => @item.ctrlr_name, :action => 'edit', :id => @item, :order_sublist => 'tags', :order_by => 'name' }, :class => 'col_sorting_link' %> </th>
+        <th> Count </th>
+        </tr>
+
+<% if @tags != nil %>
+<% for tag in (@tags.kind_of? Array) ? @tags : [ @tags ] %>
+        <tr>
+    <td class="links no_lf">
+        <%= link_to image_tag("blue_x.jpg",{:border=>"0", :title => 'Remove'}), {:controller => 'items', :action => 'remove_from_tags', :id => @item.id, :tag_id => tag.id} %>
+        </td>
+        <td class="no_lf">
+        <% text = tag.name.to_s %>
+        <% text = (auto_link(text)) %>
+        <% text = "&nbsp;" if text.length == 0 %>
+        <%= link_to text, url_show(tag), :class => 'identity_link' %> 
+        </td>
+        <td class="no_lf">
+        <% text = tag.count.to_s %>
+        <% text = (auto_link(text)) %>
+        <% text = "&nbsp;" if text.length == 0 %>
+        <%= text %> 
+        </td>
+        </tr> 
+<% end %>
+<% end %>
+        <tr><td class="cmd" colspan="4"> 
+<%= link_to 'Add Tag', :controller => 'items', :action => 'add_to_tags', :id => @item.id, :obj_context => @item.iname %> 
+</td></tr>
+        </table>
+
+    </div>           <!-- end div35 -->
+  </div>               <!-- end div33 -->
+<% end %>
+<% } %>
+
+<% @ft_view_section_order = []
+   @ft_view_section_order << :property_attrs
+   @ft_view_section_order << :ref_sources
+   @ft_view_section_order << :tags
+%>
+
+<!-- BEGIN-UID.user_ordering -->
+
+<!-- END-UID.user_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+
+
+</div>                           <!-- end div1 -->
+
+<% unless @embedded %>
+
+<div class="buttons_etc buttons_etc_bottom">
+<table class="buttons_etc_bottom_table" border="0" cellspacing="0">
+<tr>
+  <td width="60%" valign="top">
+    <%= js_button_to 'Normal View', :controller => 'attributes', :action => 'show', :id => @attribute %> 
+    <select onchange="javascript: location = this[this.selectedIndex].value;">
+      <option value="#">Select an action...</option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'attributes', :action => 'list')%>"> <%="Table of Attribute".pluralize%> </option>
+      <option value="<%=url_for(:controller => 'attributes', :action => 'block_list')%>"> <%="List of Attribute".pluralize%> </option>
+
+    <option value="#">----------------</option>
+    <option value="<%=url_for(:controller => 'properties', :action => 'new', :item_id => @attribute.id, :obj_context => @attribute.iname)%>"> .. Add new Property </option>
+
+
+
+    </select>
+  </td>
+  <td class="context" width="40%">
+   <%=context_links(@attribute)%>
+  </td>
+</tr>
+</table>
+</div>
+
+<% end %>

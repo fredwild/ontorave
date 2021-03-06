@@ -1,0 +1,55 @@
+
+	Subtopics
+	<div id="lhs_subtopics" style="border:solid 1px gray; padding:2px; ">
+
+<% if params[:action].to_s.include?('edit') %>
+		<%= show_hide '&nbsp;edit subtopics', 'add_subs_form' %> 
+<% else %>
+		<%= show_hide '&nbsp;add subtopics', 'add_subs_form' %> 
+<% end %>
+		<br />
+		<div id="add_subs_form" style="margin:4px; display:none;">
+			<%=form_tag :action => 'add_sub_nodes', :id => @node %>
+				 <%=text_area_tag "items", {}, :style=>'width:95%;'%><br />
+				 <%=submit_tag("Save")%> 
+<% if params[:action].to_s.include?('edit') %>
+				 &nbsp; <%=submit_tag("Remove")%> 
+<% end %>
+			</form>
+		</div>
+
+		<% for node in @sub_nodes do %>
+			<%= tree_for node, :controller => 'public_pages', :action => 'wiki_view_element' %>
+		<% end %>
+	</div>
+	
+	<br />
+	
+	Tags
+	<div id="wiki_tags" style="border:solid 1px gray; padding:2px;">
+<%
+		@obj = @context = @node
+		@tags.delete_if{|t| t.name[0,1] == "_"}
+		@splay = 'vertical'
+%>
+<% if params[:action].to_s.include?('edit') %>
+		<%= show_hide '&nbsp;edit tags', 'add_tags_form' %> 
+<% else %>
+		<%= show_hide '&nbsp;add tags', 'add_tags_form' %> 
+<% end %>
+		<br />
+		<div id="add_tags_form" style="margin:4px; display:none;">
+			<%=form_tag :action => 'add_tags', :id => @node%>
+				<%=text_area_tag "items", {}, :style=>'width:95%;' %>
+				<%=submit_tag "Save"%> 
+<% if params[:action].to_s.include?('edit') %>
+				&nbsp; <%=submit_tag "Remove"%> &nbsp; 
+<% end %>
+				<%= show_hide 'scope', 'tag_scope_select' %>
+				<div id="tag_scope_select" style="display:none;">
+					<%=select_tag 'scope', options_for_select(['This topic','Subtopics','Subtopics on-going']), :style=>'width:100%;' %>
+				</div>
+			</form>
+		</div>
+		<%=render :partial => 'tag_list'%>
+	</div>

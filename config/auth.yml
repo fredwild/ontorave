@@ -1,0 +1,27 @@
+
+User:
+    full_text_search:
+        all: true
+    fast_ops:
+        all: true
+    public_pages:
+        all: true
+    sections:
+        all: true
+    attributes:
+        all: true
+    values:
+        all: true
+    items:
+        all: true
+    info_nodes:
+        all: true
+    tags:
+        all: true
+    properties:
+        all: true
+
+#BEGIN-UID.auth_ext
+
+#END-UID.auth_ext
+

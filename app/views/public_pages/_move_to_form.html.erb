@@ -1,0 +1,5 @@
+
+<%=form_tag :action => 'move_to_node', :id => @node %>
+	<%=submit_with_confirm_tag "Move to", :style => 'width:1.1in;'%>
+	<%=select_tag "target",'<option value="0"></option>'+options_for_select((@node.get_move_targets).collect{|item| [item.nav_name,item.id]}) %>
+</form>

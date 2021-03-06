@@ -1,0 +1,97 @@
+    <p class="search_form">
+      <% form_tag( :controller => 'full_text_search', :action => 'search' ) do %>
+        <%= submit_tag "Search" %> <%= text_field_tag 'search_text', "", :size => 20 %>
+
+      &nbsp;&nbsp;<select onchange="javascript: location = this[this.selectedIndex].value;">
+      <option value="#">Select an action...</option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'tags', :action => 'new')%>"> Add new Tag </option>
+
+
+<!-- BEGIN-UID.user_actions -->
+
+<!-- END-UID.user_actions -->
+
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'fast_ops', :action => 'images')%>"> Manage Images </option>
+      <option value="<%=url_for(:controller => 'fast_ops', :action => 'docs')%>"> Manage Attachments </option>
+    </select>
+
+    <% end %> <!-- end form_tag -->
+  </p>
+
+<% main_sections = [] %>
+
+    <% main_sections << "section_tag" %>
+    <% content_for("section_tag") { %>
+
+          <!-- Tag -->
+
+          <div style="margin-left:10px;">
+              <%= instance_count_for( {
+                       :obj_class => "Tag",
+                       :title => "Tag".pluralize,
+                       :title_link => url_for(:controller => 'tags', :action => 'list') } ) %>
+          </div>
+
+
+    <% } %>
+
+<% assn_sections = [] %>
+
+<% codetable_sections = [] %>
+
+<% hidden_sections = [] %>
+
+
+<!-- BEGIN-UID.user_grouping -->
+	<% content_for('top_level_objs') do %>
+		<blockquote>
+			<p><b>Top Level Items</b></p>
+			<blockquote>
+			<% for x in ListItem.top_level_items do %>
+			<p>
+				<%= js_button_to " GO ", :controller => 'public_pages', :action => 'top', :id => x %>
+				&nbsp; <%= link_to x.iname, :controller => 'list_items', :action => 'show', :id => x %>
+			</p>
+			<% end %>
+			</blockquote>
+		</blockquote>
+	<% end %>
+<!-- END-UID.user_grouping -->
+
+<%
+   if ! @content_for_top_level_objs
+     content_for("top_level_objs") {
+%>
+        <div>
+         <div class="index_section"><span class="open_close" onClick="Element.toggle('main_contents')"> <b>Main</b></span>
+          <div id="main_contents" style='display:block'>
+
+<% for section in main_sections.sort do %>
+               <%= yield section %>
+<% end %>
+
+            <br />
+          </div>
+         </div>
+        </div>
+<%
+     }
+   end
+%>
+
+    <h3 class="index_contents_heading">Contents</h3>
+
+    <%= yield :top_level_objs %>
+
+    <%= yield :section_associations %>
+
+    <%= yield :section_refdata %>
+
+    <%= yield :section_hidden %>
+
+<!-- BEGIN-UID.userdivs -->
+
+<!-- END-UID.userdivs -->
+

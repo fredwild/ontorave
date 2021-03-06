@@ -1,0 +1,31 @@
+
+
+<div style="padding:12px; background:wheat; border:solid 1px black;" id="doc_update_form">
+
+
+	<%= form_tag( params.update({:action => 'update_view', :id => @node}) ) %>
+
+		<p style="float:right; margin-top:10px;margin-bottom:15px;">
+		<%= submit_tag 'Save' %> &nbsp; &nbsp;
+		<span style="cursor:pointer;" onclick="Element.toggle($('doc_update_form'))">
+			<%= submit_tag 'Cancel', :onclick => 'return false;' %> 
+		</span>
+		</p>
+
+		<p style="clear:both;"><!-- no text --></p>
+	
+		<%= text_area :node, :view, :style => "width:99%; height:4in; font-size:8pt; font-family:courier new;" %>
+		
+		<p style="float:right; margin-top:15px;margin-bottom:10px;">
+		<%= submit_tag 'Save' %> &nbsp; &nbsp;
+		<span style="cursor:pointer;" onclick="Element.toggle($('doc_update_form'))">
+			<%= submit_tag 'Cancel', :onclick => 'return false;' %> 
+		</span>
+		</p>
+
+		<p style="clear:both;"><!-- no text --></p>
+
+	</form> <!-- end form_tag -->
+
+
+</div>

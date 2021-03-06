@@ -1,0 +1,201 @@
+
+<!-- start toplinks -->
+
+<table style="margin-bottom:15px;" border="0" width="100%">
+<tr>
+<td width="60%" valign="top">
+
+<p>
+ <%= js_button_to "Block View", :action => 'block_list' %>
+<select onchange="javascript: location = this[this.selectedIndex].value;">
+    <option value="#">Select an action...</option>
+        <option value="#">----------------</option>
+    <% unless session['user'] && !session['user'].is_admin? %>
+        <option value="#">----------------</option>
+        <option value="<%=url_for(:action => 'download_csv')%>"> Download CSV </option>
+        <option value="<%=url_for(:action => 'csv_upload')%>"> Upload CSV </option>
+    <% end %>
+
+<!-- BEGIN-UID.user_actions -->
+
+<!-- END-UID.user_actions -->
+
+    </select>
+</p>
+
+<% if @paginate_view %>    
+<p>
+ <%= ("Page: " + pagination_links(@attribute_pages, :params =>  params) ) if (@attribute_pages.current.previous || @attribute_pages.current.next) %> 
+ <%= " | " + (link_to 'All on one', :action => 'list', :order_by => (@order_field ? @order_field : 'name'), :page_length => 100000) if (@attribute_pages.current.previous || @attribute_pages.current.next) %> 
+ <% if @page_len && @page_len == 100000 %>    
+ Page: <%= link_to "1", :action => 'list', :order_by => (@order_field ? @order_field : 'name'), :page => '1' %> ..
+ <% end %>
+</p>
+<% end %>    
+
+<div class="list_search">
+<%=form_tag(:action => 'list')%>
+Find (any:%) 
+<%=text_field_tag("search_str", {}, {:value => params[:search_str].to_s, :style=>"margin:0px;font-size:10pt;"} )%>
+in <%=select_tag "field", 
+                   options_for_select([
+                   ["Name", "name"],
+                   ["Value", "value"]],
+                   params[:field]), 
+                   :style=>"margin:0px;font-size:10pt;"%>
+<%=submit_tag("Search")%> <%=js_button_to "Cancel", :action => 'list'%>
+</form>
+</div>
+
+</td>
+
+<td width="40%" valign="top">
+</td>
+</tr>
+</table>
+
+<!-- end toplinks -->
+
+
+
+<table class="master" cellspacing="1">
+
+    <!-- table header --> 
+  
+<tr>
+
+    <th>&nbsp;</th>
+
+    <th>
+    <% if @order_field == "name" %>
+        Name
+    <% else %>
+        <%= link_to "Name", params.merge({ :action => 'list', :order_by => 'name', :page => '1', :page_length => @page_len ? @page_len : 20}), :class => 'col_sorting_link' %>
+    <% end %>
+    </th>
+
+    <th>
+    <% if @order_field == "value" %>
+        Value
+    <% else %>
+        <%= link_to "Value", params.merge({ :action => 'list', :order_by => 'value', :page => '1', :page_length => @page_len ? @page_len : 20}), :class => 'col_sorting_link' %>
+    <% end %>
+    </th>
+
+    <th>
+    <% if @order_field == "created_at" %>
+        Created At
+    <% else %>
+        <%= link_to "Created At", params.merge({ :action => 'list', :order_by => 'created_at', :page => '1', :page_length => @page_len ? @page_len : 20}), :class => 'col_sorting_link' %>
+    <% end %>
+    </th>
+
+    <th>
+    <% if @order_field == "updated_at" %>
+        Updated At
+    <% else %>
+        <%= link_to "Updated At", params.merge({ :action => 'list', :order_by => 'updated_at', :page => '1', :page_length => @page_len ? @page_len : 20}), :class => 'col_sorting_link' %>
+    <% end %>
+    </th>
+
+    <th>
+    <% if @order_field == "sort_code" %>
+        Sort Code
+    <% else %>
+        <%= link_to "Sort Code", params.merge({ :action => 'list', :order_by => 'sort_code', :page => '1', :page_length => @page_len ? @page_len : 20}), :class => 'col_sorting_link' %>
+    <% end %>
+    </th>
+
+    <th>
+        <% if @order_field == "info_node" %>
+            Info Node
+        <% else %>
+            <%= link_to 'Info Node', params.merge({:action => 'list', :order_by => 'info_node', :page => '1', :page_length => @page_len ? @page_len : 20}) %>
+        <% end %>
+    </th>
+
+</tr>
+
+
+    <!-- table body --> 
+  
+<%
+    for attribute in @attributes
+%>
+
+    <tr class="<%=cycle("odd","even")%>">
+
+        <td class="links no_lf">
+        <%= link_to image_tag("pencil.jpg",{:border=>"0", :title => 'Edit'}), {:controller => attribute.ctrlr_name, :action => 'edit', :id => attribute} %>
+        | <%= link_to image_tag("blue_x.jpg",{:border=>"0", :title => 'Delete'}), { :action => 'destroy', :id => attribute }, :confirm => 'Are you sure?' %>
+        </td>
+
+    <td class="no_lf">
+    <% text = attribute.name.to_s %>
+    <% text = (auto_link(text)) %>
+    <% text = "&nbsp;" if text.length == 0 %>
+    <%= link_to text, url_show(attribute), :class => "identity_link" %> 
+    </td>
+
+    <td class="no_lf">
+    <% text = attribute.value.to_s %>
+    <% text = (auto_link(text)) %>
+    <% text = "&nbsp;" if text.length == 0 %>
+    <%= text %> 
+    </td>
+
+    <td class="no_lf">
+    <% text = attribute.created_at.nil? ? "" : attribute.created_at.to_datetime_image %>
+    <% text = (auto_link(text)) %>
+    <% text = "&nbsp;" if text.length == 0 %>
+    <%= text %> 
+    </td>
+
+    <td class="no_lf">
+    <% text = attribute.updated_at.nil? ? "" : attribute.updated_at.to_datetime_image %>
+    <% text = (auto_link(text)) %>
+    <% text = "&nbsp;" if text.length == 0 %>
+    <%= text %> 
+    </td>
+
+    <td class="no_lf">
+    <% text = attribute.sort_code.to_s %>
+    <% text = (auto_link(text)) %>
+    <% text = "&nbsp;" if text.length == 0 %>
+    <%= text %> 
+    </td>
+
+    <td class="no_lf"> 
+        <%= link_to(attribute.owner.iname, url_show(attribute.owner)) if attribute.owner %>
+    </td>
+
+    </tr>
+
+    <% end %>
+
+</table>
+
+
+<% if @paginate_view %>    
+<p>
+ <%= ("Page: " + pagination_links(@attribute_pages, :params =>  params) ) if (@attribute_pages.current.previous || @attribute_pages.current.next) %> 
+ <%= " | " + (link_to 'All on one', :action => 'list', :order_by => (@order_field ? @order_field : 'name'), :page_length => 100000) if (@attribute_pages.current.previous || @attribute_pages.current.next) %> 
+ <% if @page_len && @page_len == 100000 %>    
+ Page: <%= link_to "1", :action => 'list', :order_by => (@order_field ? @order_field : 'name'), :page => '1' %> ..
+ <% end %>
+</p>
+<% end %>    
+
+<p>
+ <%= js_button_to "Block View", :action => 'block_list' %>
+<select onchange="javascript: location = this[this.selectedIndex].value;">
+    <option value="#">Select an action...</option>
+        <option value="#">----------------</option>
+    <% unless session['user'] && !session['user'].is_admin? %>
+        <option value="#">----------------</option>
+        <option value="<%=url_for(:action => 'download_csv')%>"> Download CSV </option>
+        <option value="<%=url_for(:action => 'csv_upload')%>"> Upload CSV </option>
+    <% end %>
+    </select>
+</p>
+

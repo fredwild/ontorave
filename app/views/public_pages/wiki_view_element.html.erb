@@ -1,0 +1,67 @@
+
+<div>
+
+	<div style="position:absolute; top:90px; left:0px; width:100%;">
+		<div style="float:right; margin-right:25px;">
+			<%= show_hide 'Attributes', 'info_obj_attrs' %>
+			<div id="info_obj_attrs" style="display:none; background:ivory; padding:6px; border:solid 3px green;">
+				<table>
+					<tr> <td><b>Name</b></td> <td>&nbsp;<td> <b>Value</b></td> </tr>
+					<% for attr in @attributes do%>
+						<tr>
+							<td style="color:#585; padding:0px 4px 0px 4px;"><b><%=attr.name.to_s%></b></td>
+							<td>:</td>
+							<td><%=auto_link(strip_para(rc_format(attr.value.to_s)))%></td>
+						</tr> 
+					<% end %>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<div style="position:absolute; top:58px; left:0px; width:100%;">
+		<% bgcolor = "transparent"; bgcolor2 = "ivory"; @tag = Tag.new %>
+		<div style="float:right; margin-right:20px; background:<%=bgcolor%>">
+			<%=form_remote_tag( :url => url_for(:action => 'find_by_tags'), 
+								:update => 'tag_matches',
+							    :complete => "Element.show('tag_matches')" ) %>
+				<%=text_field_with_auto_complete :tag, :name, :style => 'width:1in;' %> &nbsp; <%=submit_tag("Find by tag(s)", :style => 'width:1in;' )%> 
+			</form>
+			<div id="tag_matches" onclick="Element.hide('tag_matches');"
+				 style="display:none; border:solid 1px black; margin-top:10px; width:2.3in; background:<%=bgcolor2%>; height:0.85in; overflow:auto;">
+			</div>
+		</div>
+	
+		<div style="margin-left:200px;">
+			<%= js_button_to "&nbsp;Edit&nbsp;", :action => 'wiki_edit_element', :id => @node %>
+		</div>
+	</div>
+	
+
+	<!-- Main Content --> 
+
+	<div class="wiki_lhs">
+		<%= render :partial => 'wiki_lhs' %>
+	</div>
+		
+	<div class="wiki_rhs">
+
+		<div class="wiki_rhs_content">
+			<h1 style="margin-bottom:16px; margin-top:0px; border-bottom:solid 1px black; ">
+				<%= @node.iname %>
+			</h1>
+			
+			<% for @doc in @docs do %>
+				<div style="width:99%;">
+					<%= wikize(@doc.body.to_s) %>
+				</div>
+			<% end %>
+		</div>
+
+		<p style="height:1.5in;">&nbsp;</p>
+	</div>
+
+	<p class="spacer">&nbsp;</p>
+
+</div>
+

@@ -1,0 +1,59 @@
+
+<div class="idx_outer" style="padding:.5in;">
+
+    <p class="search_form">
+		<%= form_tag( :controller => 'full_text_search', :action => 'search' ) %>
+    		<%= submit_tag "Search" %> <%= text_field_tag 'search_text', "", :size => 20 %>
+
+    		&nbsp;&nbsp;<select onchange="javascript: location = this[this.selectedIndex].value;">
+    		<option value="#">Select an action...</option>
+    		<option value="<%=url_for(:controller => 'fast_ops', :action => 'images')%>"> Manage Images </option>
+    		<option value="<%=url_for(:controller => 'fast_ops', :action => 'docs')%>"> Manage Documents </option>
+    		</select>
+		</form>
+    </p>
+
+
+	<h3>Domains</h3>
+
+	<div>
+
+		<blockquote>
+
+		<table cellpadding="4">
+		<% for x in InfoNode.top_level_items do %>
+		<tr>
+			<td><%= js_button_to " Enter ", :controller => 'public_pages', :action => 'top', :id => x %></td>
+			<td><%= link_to x.iname, :controller => 'info_nodes', :action => 'show', :id => x %></td>
+			<td><%= link_to("Delete", {:controller => 'info_nodes', :action => 'destroy', :id => x }, { :style => 'color:maroon;'}) %></td>
+		</tr>
+		<% end %>
+		</table>
+		
+        <p>
+            <%= form_tag :controller => 'public_pages', :action => 'top', :mode => 'wiki' %>
+               <%= text_field_tag "domain" %> <%=submit_tag "Create New Domain" %>
+            </form>
+        </p>
+
+		</blockquote>
+		
+	</div>
+
+	<h3>Elements</h3>
+	
+		<blockquote>
+
+			<p><%= link_to "Info Nodes", :controller => 'info_nodes', :action => 'list' %></p>
+			<p><%= link_to "Values", :controller => 'values', :action => 'list' %></p>
+			<p><%= link_to "Attributes", :controller => 'attributes', :action => 'list' %></p>
+			<p><%= link_to "Doc Sections", :controller => 'sections', :action => 'list' %></p>
+		
+			<p>&nbsp;</p>	
+			
+			<p><%= link_to "Tags", :controller => 'tags', :action => 'list' %></p>
+			<p><%= link_to "Properties", :controller => 'properties', :action => 'list' %></p>
+
+		</blockquote>
+		
+</div>

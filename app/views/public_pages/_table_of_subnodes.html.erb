@@ -1,0 +1,6 @@
+<table cellspacing="1" class="compact">
+	<%= "<tr><th>" + @table.col_names.join("</th><th>") + "</th></tr>" %>
+	<% for row in @table.rows do %>
+        <%= "<tr><td>" + row.join("</td><td>") + "</td></tr>" %>
+	<% end %>
+</table>

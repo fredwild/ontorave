@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+	
+	<% content_for('menu_bar') do %>
+		<p style="margin-top:0px; float:right;">
+			<%= link_to "Logout", :controller => 'index', :action => 'entry_gate' %>
+		    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<%=@node.id.to_s%>
+		</p>
+		<%=context_links(@node)%>
+	<% end %>
+
+  <% content_for('banner') do %>
+      <div class="menu_bar">
+        <%= yield :menu_bar %>
+      </div>
+  <% end %>
+
+  <% content_for('header') do %>
+    <div class="header">
+      <%= yield :banner %>
+
+    </div>
+  <% end %>
+
+  <% content_for('footer') do %>
+    <div class="footer">
+    </div>
+  <% end %>
+
+  <% content_for('body') do %>
+    <%= yield :header %>
+
+	<div id="view_links">
+	</div>
+
+    <div class="main">
+      <%= yield :layout %>
+    </div>
+
+    <%= yield :footer %>
+  <% end %>
+
+<html>
+    <head>
+        <META HTTP-EQUIV="Pragma" CONTENT="no-cache"> <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache"> 
+        <%= javascript_include_tag 'date-functions' %>
+        <%= javascript_include_tag 'datechooser' %>
+        <%= javascript_include_tag :defaults %>
+        <%= stylesheet_link_tag    'datechooser' %>
+
+        <!--[if lte IE 6.5]>
+        <%= stylesheet_link_tag 'select-free' %>
+        <![endif]-->
+        <%= stylesheet_link_tag 'public_pages' %>
+
+		<style type="text/css">
+			body { 
+				background: #E0E0E0 url(../../images/rose_bg.jpg); 
+				background-repeat:no-repeat;	
+			}
+		</style>
+
+        <title><%=session['app_title']||"OntoRave"%> <%= (" - " + @node.name.to_s) if @node %></title>
+    </head>
+
+    <body>
+    	
+    <div class="public_pages_layout" onload="ffield = document.getElementById('focus'); if (ffield && ffield.value.length == 0) ffield.focus();">
+
+	  <div id="scratch_area"></div>
+
+	  <center>
+      <%= yield :body %>
+	  </center>
+	  
+	  <p class="spacer"></p>
+
+	  <% if ENV['RAILS_ENV'] == 'development' %>
+	    <% @css_text = File.open("#{RAILS_ROOT}/public/stylesheets/public_pages.css","r"){|f| @css_text = f.read} %>
+	    <div style="margin: 40px 5px 5px 5px;">
+	      <p style="color:#fff;cursor:pointer;" onclick="Element.toggle($('css_edit'));">Edit CSS</p>
+	      <div name="css_edit" id="css_edit" style="display:none;">
+			  <%=form_remote_tag  :url => url_for({:controller => 'fast_ops', :action => 'edit_style_sheet', :css_name => 'public_pages'}), :success => 'loc = location; location = loc;' %>
+	        <%=text_area_tag("css_text", @css_text, :style => "width:7in;height:2in;")%><br/>
+	        <%=submit_tag("Update")%>
+	      </form>
+	      </div>
+	    </div>
+	  <% end %>
+	
+	  <% if ENV['RAILS_ENV'] == 'development' %>
+	    <div id="debug" style="margin: 20px 5px 5px 5px;">
+	      <a href="#" onclick="Element.toggle('debug_info');return false" style="text-decoration: none; color: #fff;">Show Runtime Context</a>
+	      <div id="debug_info" style="display : none;">
+	          <%= debug session %>
+			  <hr />
+	          <%= debug params %>
+	      </div>
+	    </div>
+	  <% end %>
+
+	</div>
+
+    </body>
+</html>
+

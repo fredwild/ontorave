@@ -1,0 +1,172 @@
+
+<%
+   # default vis control to show all
+   unless @show_item
+     @show_item = {}
+     @show_item.default = true
+   end
+
+   view_params = { :form_name => 'tags/form' }
+   @ft_view_section = {}
+%>
+<% unless @embedded %>
+
+<div class="buttons_etc buttons_etc_top">
+<table class="buttons_etc_top_table" border="0" cellspacing="0">
+<tr>
+  <td width="60%" valign="top">
+    <%= js_button_to 'Normal View', :controller => 'tags', :action => 'show', :id => @tag %> 
+    <select onchange="javascript: location = this[this.selectedIndex].value;">
+      <option value="#">Select an action...</option>
+      <option value="#">----------------</option>
+    <option value="<%=url_for(:controller => 'tags', :action => 'list')%>"> <%="Table of Tag".pluralize%> </option>
+    <option value="<%=url_for(:controller => 'tags', :action => 'block_list')%>"> <%="List of Tag".pluralize%> </option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'tags', :action => 'new')%>"> Add new Tag </option>
+
+    <option value="#">----------------</option>
+
+<!-- BEGIN-UID.user_actions -->
+
+<!-- END-UID.user_actions -->
+
+    </select>
+  </td>
+  <td class="context" width="40%">
+   <%=context_links(@tag)%>
+  </td>
+</tr>
+</table>
+</div>
+
+<% end %>
+
+<!-- BEGIN-UID.user_mods -->
+
+<!-- END-UID.user_mods -->
+
+<fieldset>
+<LEGEND>Properties</LEGEND>
+
+<% form_tag(:controller => 'tags', :action => 'update', :id => @tag) do %>
+  <p class="submit_top">&nbsp;<%= submit_tag 'Save Changes' %> </p>
+  <%= render :partial => view_params[:form_name] %>
+  <p class="submit_bottom">&nbsp;<%= submit_tag 'Save Changes' %> </p>
+<% end %> <!-- end form_tag -->
+
+</fieldset>
+
+<p class="spacer">&nbsp;</p>
+
+<div class="edit_view edit_view_tag">              <!-- div1 -->
+
+<!-- BEGIN-UID.user_related_items -->
+<h3 class="rel_items_heading">Related Items</h3>
+<!-- END-UID.user_related_items -->
+
+<div class="show_hide_subtable_text">
+<% listtext_op = session['list_text_toggles'] ? "show text" : "hide text" %>
+<%= link_to listtext_op, {:controller => 'fast_ops', :action => 'toggle_list_text_toggle'}, :style => 'font-size:8pt;' %> | 
+<% listimage_op = session['list_image_toggles'] ? "show images" : "hide images" %>
+<%= link_to listimage_op, {:controller => 'fast_ops', :action => 'toggle_list_image_toggle'}, :style => 'font-size:8pt;' %>
+</div>
+
+<% @ft_view_section = {} %>
+
+<% @ft_view_section[:items] = capture { %>
+<% if @show_item[:items] then %>
+
+  <!-- Items -->
+
+  <a name="items"></a>
+
+  <div id="show_rel_items" class="show_rel show_rel_items">                                                 <!-- div28 -->
+    <div id="show_rel_items_label" class="rel_label"> Items &nbsp; <%= show_hide('show/hide','show_rel_items_value')%> </div>        <!-- div29 -->
+
+    <div id="show_rel_items_value" class="rel_value">                                                                           <!-- div30 -->
+        <table class="detail" cellspacing="1">
+        <tr>
+        <th>&nbsp;</th>
+        <th> <%= link_to 'Name', { :controller => @tag.ctrlr_name, :action => 'edit', :id => @tag, :order_sublist => 'items', :order_by => 'name' }, :class => 'col_sorting_link' %> </th>
+        <th> <%= link_to 'Sort Code', { :controller => @tag.ctrlr_name, :action => 'edit', :id => @tag, :order_sublist => 'items', :order_by => 'sort_code' }, :class => 'col_sorting_link' %> </th>
+        <th> <%= link_to("Owner", { :controller => @tag.ctrlr_name, :action => 'edit', :id => @tag, :order_sublist => 'items', :order_by => 'owner' }, :class => 'col_sorting_link') %> </th>
+        </tr>
+        <% for item in (@items || []) %>
+        <tr>
+
+        <td class="links no_lf">
+        <%= link_to image_tag("blue_x.jpg",{:border=>"0", :title => 'Remove'}), {:controller => 'tags', :action => 'remove_from_items', :id => @tag.id, :item_id => item.id} %>
+        &nbsp; <%= link_to image_tag("pencil.gif",{:border=>"0", :title => 'Edit'}), {:controller => item.ctrlr_name, :action => 'edit', :id => item.id, 
+                                       :return_to_controller => 'tags', :return_to_action => 'edit', :return_to_id => @tag.id} %> 
+        </td>
+        <td class="no_lf">
+        <% text = item.name.to_s %>
+        <% text = (auto_link(text)) %>
+        <% text = "&nbsp;" if text.length == 0 %>
+        <%= link_to text, url_show(item), :class => "identity_link" %> 
+        </td>
+        <td class="no_lf">
+        <% text = item.sort_code.to_s %>
+        <% text = (auto_link(text)) %>
+        <% text = "&nbsp;" if text.length == 0 %>
+    <%= text %> 
+        </td>
+        <td> <%= item.owner && link_to(item.owner.iname, url_show(item.owner)) %>&nbsp;</td>
+        </tr>
+        <% end %>
+        <tr>
+        <td class="cmd" colspan="4">
+        <%= link_to 'Add Item', :controller => 'tags', :action => 'add_to_items', :id => @tag.id, :obj_context => @tag.iname %> 
+        </td>
+        </tr>
+        </table>
+
+    </div>          <!-- div31 -->
+  </div>            <!-- div32 -->
+<% end %>
+<% } %>
+
+<% @ft_view_section_order = []
+   @ft_view_section_order << :items
+%>
+
+<!-- BEGIN-UID.user_ordering -->
+
+<!-- END-UID.user_ordering -->
+
+<% for s in @ft_view_section_order %>
+   <%= @ft_view_section[s].to_s %>
+<% end %>
+
+
+</div>                           <!-- end div1 -->
+
+<% unless @embedded %>
+
+<div class="buttons_etc buttons_etc_bottom">
+<table class="buttons_etc_bottom_table" border="0" cellspacing="0">
+<tr>
+  <td width="60%" valign="top">
+    <%= js_button_to 'Normal View', :controller => 'tags', :action => 'show', :id => @tag %> 
+    <select onchange="javascript: location = this[this.selectedIndex].value;">
+      <option value="#">Select an action...</option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'tags', :action => 'list')%>"> <%="Table of Tag".pluralize%> </option>
+      <option value="<%=url_for(:controller => 'tags', :action => 'block_list')%>"> <%="List of Tag".pluralize%> </option>
+      <option value="#">----------------</option>
+      <option value="<%=url_for(:controller => 'tags', :action => 'new')%>"> Add new Tag </option>
+
+    <option value="#">----------------</option>
+
+
+
+    </select>
+  </td>
+  <td class="context" width="40%">
+   <%=context_links(@tag)%>
+  </td>
+</tr>
+</table>
+</div>
+
+<% end %>

@@ -1,0 +1,21 @@
+
+<!-- BEGIN-UID.user_ctrls -->
+
+<!-- END-UID.user_ctrls -->
+
+<div id="add_to_ref_targets_list">
+    <% form_tag( :controller => 'info_nodes', :action => :update_ref_targets, :id => @info_node ) do %>
+        <%= submit_tag 'Add Selected' %>
+        <p class="select_list">&nbsp;</p>
+        <% for item in @items %>
+            <p class="select_list"> <%= check_box_tag("item_ids[]",item.id) %> <%= item.sname %> </p>
+        <% end %>
+        <p class="select_list">&nbsp;</p>
+        <%= submit_tag 'Add Selected' %>
+    <% end %> <!-- end form_tag -->
+</div>
+
+<!-- BEGIN-UID.user_divs -->
+
+<!-- END-UID.user_divs -->
+
